@@ -1,3 +1,4 @@
+#! /bin/bash
 # $1 should contain the desired path of the ext2 disk image
 
 # set -e

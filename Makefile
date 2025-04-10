@@ -41,7 +41,7 @@ build/arch/$(arch)/%.o: src/arch/$(arch)/%.asm
 	mkdir -p $(shell dirname $@)
 	nasm -f elf64 $< -o $@
 
-# compile C source files
+# compile C object files
 build/arch/$(arch)/%.o: src/arch/$(arch)/%.c
 	mkdir -p $(shell dirname $@)
 	~/opt/cross/bin/x86_64-elf-gcc -g -Wall -Werror -ffreestanding -c $< -o $@
