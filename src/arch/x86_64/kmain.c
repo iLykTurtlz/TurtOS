@@ -12,7 +12,7 @@ void kmain(void)
 	
 	keyboard_init();
 	poll();
-	//ps2_diagnostic();
+	
 
 
 	/*
@@ -52,8 +52,8 @@ void kmain(void)
 
 	count = kprintf("%qu, %hd, %s stuffstuffstuff %x\n", (unsigned long long)ULONG_MAX, 0x7FFF, "blah", 0xca11ab1e);
 	kprintf("count = %d\n", count);
-
 	*/
+	
 
 	// kprintf("%f", 3.14); //WEIRD: it all starts over when this runs!
 

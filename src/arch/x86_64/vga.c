@@ -4,21 +4,23 @@
 #define VGA_BASE 0xb8000
 #define LINE(X) ((X) / 80)
 
-static unsigned short *vgaBuff = (unsigned short *)VGA_BASE;
-static int width = 80;
-static int height = 25;
+static unsigned short * const vgaBuff = (unsigned short *)VGA_BASE;
+static const int width = 80;
+static const int height = 25;
 static int cursor = 0;
-static unsigned char color = FG(VGA_WHITE) | BG(VGA_BLACK);
-static unsigned char warn_color = FG(VGA_YELLOW) | BG(VGA_BLACK);
-static unsigned char error_color = FG(VGA_LIGHT_RED) | BG(VGA_BLACK);
-static unsigned char debug_color = FG(VGA_LIGHT_GREEN) | BG(VGA_BLACK);
+static const unsigned char color = FG(VGA_WHITE) | BG(VGA_BLACK);
+static const unsigned char warn_color = FG(VGA_YELLOW) | BG(VGA_BLACK);
+static const unsigned char error_color = FG(VGA_LIGHT_RED) | BG(VGA_BLACK);
+static const unsigned char debug_color = FG(VGA_LIGHT_GREEN) | BG(VGA_BLACK);
+static const unsigned char empty = (( FG(VGA_BLACK) | BG(VGA_BLACK) ) << 8) | '\0';
 
 void scroll()
 {
 	size_t i;
+	
 	for (i = 0; i < height - 1; i++)
 		memcpy(vgaBuff + i * width, vgaBuff + (i + 1) * width, width * sizeof(unsigned short));
-	memset(vgaBuff + i * width, FG(VGA_BLACK) | BG(VGA_BLACK), width * sizeof(unsigned short));
+	memset(vgaBuff + i * width, empty, width * sizeof(unsigned short));
 	cursor = (height - 1) * width;
 }
 
@@ -73,3 +75,17 @@ void VGA_display_str(const char *s, int level)
 		s++;
 	}
 }
+
+void VGA_backspace(void) {
+	int start_line = LINE(cursor);
+	while (cursor > 0 && vgaBuff[cursor] == empty) {
+		cursor--;
+	}
+	int end_line = LINE(cursor);
+	if (start_line == end_line) {
+		vgaBuff[cursor] = empty;
+	} else {
+		vgaBuff[++cursor] = empty;
+	}
+}
+

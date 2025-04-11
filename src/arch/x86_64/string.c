@@ -58,3 +58,25 @@ char *strreverse(char *s)
 	}
 	return s;
 }
+
+char isupper(char c) {
+	return 'A' <= c && c <= 'Z';
+}
+
+char islower(char c) {
+	return 'a' <= c && c <= 'z';
+}
+
+char toupper(char c) {
+	if (islower(c)) 
+		return c - 32;
+	return c;
+}
+
+char tolower(char c) {
+	if (isupper(c))
+		return c + 32;
+	return c;
+}
+
+

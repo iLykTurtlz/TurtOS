@@ -29,6 +29,7 @@
 void VGA_clear(void);
 void VGA_display_char(char, unsigned char);
 void VGA_display_str(const char*, int);
+void VGA_backspace(void);
 
 
 #endif

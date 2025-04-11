@@ -146,7 +146,7 @@ int kprintf(const char *fmt, ...)
                 }
                 break;
 
-            // long long
+            // long
             case 'q':
                 switch (*(fmt + 2))
                 {

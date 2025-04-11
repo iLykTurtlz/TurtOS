@@ -9,6 +9,10 @@ int strcmp(const char *s1, const char *s2);
 const char *strchr(const char *s, int c);
 char *strcat(char *restrict dst, const char *restrict src);
 char *strreverse(char *s);
+char toupper(char c);
+char tolower(char c);
+char isupper(char c);
+char islower(char c);
 
 
 #endif

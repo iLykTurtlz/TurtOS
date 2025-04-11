@@ -1,7 +1,9 @@
 #include "keyboard.h"
 #include <stdint.h>
+#include <stddef.h>
 #include "vga.h"
 #include "kprint.h"
+#include "string.h"
 
 #define PS2_DATA 0x60
 #define PS2_CMD 0x64
@@ -33,6 +35,18 @@
 #define USING_SCAN_CODE1 0x43
 #define USING_SCAN_CODE2 0x41
 #define USING_SCAN_CODE3 0x3f
+
+
+/* driver parameters */
+#define COMMAND_QUEUE_SIZE 64
+
+enum State {
+    INIT,
+    SCAN,
+    IGNORE,
+    COMMAND,
+    STOP,
+};
 
 
 struct config {
@@ -150,18 +164,150 @@ void keyboard_init() {
     }
 }
 
-static const uint8_t jump_table[] = {
+struct command_queue {
+    size_t first;
+    size_t last;
+    uint8_t q[COMMAND_QUEUE_SIZE];
+}; 
+
+
+enum Symbol {
+    ESC,
 
 };
 
+
+// missing 0x54-0x56, 0x59-0x80, above 0xed
+static const char basic_repr_table[] = {
+    0,  0,  '1', '2', '3', '4', '5', '6', '7', '8',
+    '9', '0', '-', '=', 0, '\t', 'q', 'w', 'e', 'r', 
+    't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n', 0, 
+    'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';',
+    '\'', '`', 0, '\\', 'z', 'x', 'c', 'v', 'b', 'n', 
+    'm', ',', '.', '/', 0, '*', 0, ' ', 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, '7', '8', '9', '-', '4', '5', '6', '+', '1', 
+    '2', '3', '0', '.', 0 , 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+};
+
+// TODO: fix \t: it doesn't work.
+static const char shift_repr_table[] = {
+    0,  0,  '!', '@', '#', '$', '%', '^', '&', '*',
+    '(', ')', '_', '+', 0, '\t', 'Q', 'W', 'E', 'R', 
+    'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '\n', 0, 
+    'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':',
+    '"', '~', 0, '|', 'Z', 'X', 'C', 'V', 'B', 'N', 
+    'M', '<', '>', '?', 0, '*', 0, ' ', 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, '7', '8', '9', '-', '4', '5', '6', '+', '1', 
+    '2', '3', '0', '.', 0 , 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+};
+
+enum ReprState {
+    BASIC, SHIFTED
+};
+
+#define LSHIFT 0x2a
+#define RSHIFT 0x36
+#define CAPSLOCK 0x3a
+#define BACKSPACE 0x0e
+#define UN_LSHIFT 0xaa
+#define UN_RSHIFT 0xb6
+#define UN_CAPSLOCK 0xba
+#define UN_BACKSPACE 0x8e
+// TODO implement tab - should backspace undo tab?
+
+
+
+// static const  jump_table[] = {
+//     NULL,
+//     ascii_table,
+
+
+// };
+
 void poll(void) {
     uint8_t input;
+    enum ReprState state = BASIC;
+    int capslock = 0;
     while (1) {
         input = read(PS2_DATA);
-        if (input == 0x10) {
-            kprintf("q");
+        if (input == LSHIFT || input == RSHIFT) {
+            state = SHIFTED;
         }
+        else if (input == UN_LSHIFT || input == UN_RSHIFT) {
+            state = BASIC;
+        }
+
+        if (input == UN_CAPSLOCK) {
+            capslock = !capslock;
+        }
+
+        // TODO: move this to fun ptr lookup table
+        if (input == BACKSPACE) {
+            VGA_backspace();
+            continue;
+        }
+
+
+        char c;
+        if (state == BASIC) {
+            c = basic_repr_table[input];
+        }
+        else if (state == SHIFTED) {
+            c = shift_repr_table[input];
+        }
+        if (capslock) {
+            if (islower(c)) {
+                c = toupper(c);
+            } 
+            else if (isupper(c)) {
+                c = tolower(c);
+            }
+        }
+        if (c != 0) {
+            kprintf("%c",c);
+        }
+
+        //TODO: in VGA implement flashing cursor like vim.
     }
+
 }
 
 
