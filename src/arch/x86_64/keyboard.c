@@ -1,0 +1,169 @@
+#include "keyboard.h"
+#include <stdint.h>
+#include "vga.h"
+#include "kprint.h"
+
+#define PS2_DATA 0x60
+#define PS2_CMD 0x64
+#define PS2_STATUS PS2_CMD
+#define PS2_STATUS_OUTPUT 1
+#define PS2_STATUS_INPUT (1 << 1)
+
+/* commands */
+#define DISABLE1 0xad //keyboard
+#define DISABLE2 0xa7 //auxiliary interface = mouse
+#define ENABLE1 0xae
+#define ENABLE2 0xa8
+#define READ_CONFIG 0x20 //controller configuration byte
+#define WRITE_CONFIG 0x60
+#define RESET 0xff
+#define PS2_SELF_TEST 0xaa
+#define RESET_FAILURE 0xfc
+#define SET_SCAN_CODE 0xf0
+#define SCAN_CODE(i) i
+#define GET_SCAN_CODE 0x00
+#define ENABLE_KEYBOARD 0xf4
+
+
+/* messages from controller */
+#define ACK 0xfa
+#define RESEND 0xfe
+#define RESET_SUCCESS 0xaa
+#define PS2_SELF_TEST_SUCCESS 0x55
+#define USING_SCAN_CODE1 0x43
+#define USING_SCAN_CODE2 0x41
+#define USING_SCAN_CODE3 0x3f
+
+
+struct config {
+    uint8_t interrupt_port1 : 1;
+    uint8_t interrupt_port2 : 1;
+    uint8_t sysflag : 1;
+    uint8_t zero1 : 1; // else command
+    uint8_t clock1 : 1;
+    uint8_t clock2 : 1;
+    uint8_t translation_port1 : 1;
+    uint8_t zero2 : 1;
+} __attribute__((packed));
+
+static inline void outb(uint16_t port, uint8_t val) {
+    asm("outb %0, %1" : : "a"(val), "Nd"(port));
+}
+
+static inline uint8_t inb(uint16_t port) {
+    uint8_t ret;
+    asm volatile("inb %1, %0" : "=a"(ret) : "Nd"(port));
+    return ret;
+}
+
+void write(uint16_t port, uint8_t val) {
+    while (PS2_STATUS_INPUT & inb(PS2_STATUS))
+        ;
+    outb(port, val);
+}
+
+uint8_t read(uint16_t port) {
+    while(!(PS2_STATUS_OUTPUT & inb(PS2_STATUS)))
+        ;
+    return inb(port);
+}
+
+int handshake(uint16_t port, uint8_t command, int nb_tries) {
+    write(port, command);
+    uint8_t response = read(PS2_DATA);
+    for (int i=0; i<nb_tries && response != ACK; i++) {
+        kprintf("Response: %hx\n", (uint16_t)response);
+        kprintf("Resending...\n");
+        write(port, command);
+        response = read(PS2_DATA);
+    }
+    return response == ACK ? 1 : 0;
+}
+
+void keyboard_init() {
+    /*TODO? determine whether the PS/2 controller exists???*/
+
+    // disable devices on channel 1 and channel 2
+    write(PS2_CMD, DISABLE1);
+    write(PS2_CMD, DISABLE2);
+
+    // // flush output buffer?
+    // inb(0x60);
+
+    // read the PS/2 config byte
+    write(PS2_CMD, READ_CONFIG);
+    uint8_t config_data = read(PS2_DATA);
+    //kprintf("Config data: %hx\n", (unsigned short)config_data);
+
+    // set config
+    struct config c = *((struct config *)&config_data);
+    c.interrupt_port1 = 1; //
+    c.interrupt_port2 = 0;
+    c.sysflag = 1;
+    c.zero1 = 0;
+    c.clock1 = 1; //
+    c.clock2 = 0;
+    c.translation_port1 = 0; //
+    c.zero2 = 0;
+    config_data = *((uint8_t *)&c);
+
+    //write config byte back out to the PS/2 controller
+    write(PS2_CMD, WRITE_CONFIG);
+    write(PS2_DATA, config_data);
+
+    // controller self-test 
+    write(PS2_CMD, PS2_SELF_TEST);
+    uint8_t self_test_result = read(PS2_DATA);
+    if (self_test_result != PS2_SELF_TEST_SUCCESS)
+        VGA_display_str("Failed self test", ERROR);
+
+    //Enable port 1 (port 2 remains disabled for now)
+    write(PS2_CMD, ENABLE1);
+
+    //reset keyboard
+    write(PS2_DATA, RESET);
+    uint8_t result1 = read(PS2_DATA);
+    uint8_t result2 = read(PS2_DATA);
+    if ((result1 == ACK || result1 == RESET_SUCCESS) &&
+         (result2 == ACK || result2 == RESET_SUCCESS))
+        kprintf("Reset keyboard\n");
+    else if (result1 == RESET_FAILURE || result2 == RESET_FAILURE)
+        kprintf("Failed to reset keyboard\n");
+    else
+        kprintf("Codes returned: %hx, %hx\n", (uint16_t)result1, (uint16_t)result2);
+
+    // set scan code 1
+    int code = 1;
+    if (!handshake(PS2_DATA, SET_SCAN_CODE, 2)) {
+        VGA_display_str("Error initiating scan code setup\n", ERROR);
+    }
+    if (!handshake(PS2_DATA, SCAN_CODE(code), 2)) {
+        VGA_display_str("Error setting scan code\n", ERROR);
+    } else {
+        kprintf("Set scan code %d\n", code);
+    }
+
+    if (handshake(PS2_DATA, ENABLE_KEYBOARD, 2)) {
+        kprintf("Scanning begins now.\n");
+    } else {
+        VGA_display_str("Error enabling keyboard\n", ERROR);
+    }
+}
+
+static const uint8_t jump_table[] = {
+
+};
+
+void poll(void) {
+    uint8_t input;
+    while (1) {
+        input = read(PS2_DATA);
+        if (input == 0x10) {
+            kprintf("q");
+        }
+    }
+}
+
+
+
+

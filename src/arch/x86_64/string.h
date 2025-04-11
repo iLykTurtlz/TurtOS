@@ -11,5 +11,4 @@ char *strcat(char *restrict dst, const char *restrict src);
 char *strreverse(char *s);
 
 
-
 #endif
