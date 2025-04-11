@@ -3,6 +3,7 @@
 
 #define VGA_BASE 0xb8000
 #define LINE(X) ((X) / 80)
+#define BLINK 0x80
 
 static unsigned short * const vgaBuff = (unsigned short *)VGA_BASE;
 static const int width = 80;
@@ -12,7 +13,8 @@ static const unsigned char color = FG(VGA_WHITE) | BG(VGA_BLACK);
 static const unsigned char warn_color = FG(VGA_YELLOW) | BG(VGA_BLACK);
 static const unsigned char error_color = FG(VGA_LIGHT_RED) | BG(VGA_BLACK);
 static const unsigned char debug_color = FG(VGA_LIGHT_GREEN) | BG(VGA_BLACK);
-static const unsigned char empty = (( FG(VGA_BLACK) | BG(VGA_BLACK) ) << 8) | '\0';
+static const unsigned short empty = (( FG(VGA_BLACK) | BG(VGA_BLACK) ) << 8) | '\0';
+static const unsigned short blinking_cursor = ((BLINK | color) << 8) | ' ';
 
 void scroll()
 {
@@ -28,6 +30,7 @@ void VGA_display_char(char c, unsigned char col)
 {
 	if (c == '\n')
 	{
+		vgaBuff[cursor] = empty;
 		cursor = (LINE(cursor) + 1) * width;
 	}
 	else if (c == '\r')
@@ -39,6 +42,7 @@ void VGA_display_char(char c, unsigned char col)
 	}
 	if (cursor >= width * height)
 		scroll();
+	vgaBuff[cursor] = blinking_cursor;
 }
 
 void VGA_clear(void)
@@ -78,14 +82,17 @@ void VGA_display_str(const char *s, int level)
 
 void VGA_backspace(void) {
 	int start_line = LINE(cursor);
+	vgaBuff[cursor] = empty;
 	while (cursor > 0 && vgaBuff[cursor] == empty) {
 		cursor--;
 	}
 	int end_line = LINE(cursor);
 	if (start_line == end_line) {
-		vgaBuff[cursor] = empty;
+		vgaBuff[cursor] = blinking_cursor;
+
 	} else {
-		vgaBuff[++cursor] = empty;
+		vgaBuff[++cursor] = blinking_cursor;
 	}
+	//vgaBuff[cursor] = blinking_cursor;
 }
 
