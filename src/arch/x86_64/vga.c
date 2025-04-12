@@ -87,7 +87,7 @@ void VGA_backspace(void) {
 		cursor--;
 	}
 	int end_line = LINE(cursor);
-	if (start_line == end_line) {
+	if (start_line == end_line || cursor % width == width - 1) {
 		vgaBuff[cursor] = blinking_cursor;
 
 	} else {
