@@ -138,8 +138,8 @@ void keyboard_init() {
     write(PS2_DATA, RESET);
     uint8_t result1 = read(PS2_DATA);
     uint8_t result2 = read(PS2_DATA);
-    if ((result1 == ACK || result1 == RESET_SUCCESS) &&
-         (result2 == ACK || result2 == RESET_SUCCESS))
+    if ((result1 == RESET_SUCCESS || result2 == RESET_SUCCESS) &&
+         (result1 == ACK || result2 == ACK))
         kprintf("Reset keyboard\n");
     else if (result1 == RESET_FAILURE || result2 == RESET_FAILURE)
         kprintf("Failed to reset keyboard\n");
@@ -285,7 +285,6 @@ void poll(void) {
             continue;
         }
 
-
         char c;
         if (state == BASIC) {
             c = basic_repr_table[input];
@@ -304,10 +303,7 @@ void poll(void) {
         if (c != 0) {
             kprintf("%c",c);
         }
-
-        //TODO: in VGA implement flashing cursor like vim.
     }
-
 }
 
 

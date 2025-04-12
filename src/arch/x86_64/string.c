@@ -78,5 +78,3 @@ char tolower(char c) {
 		return c + 32;
 	return c;
 }
-
-
