@@ -239,6 +239,48 @@ static const char shift_repr_table[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
+
+
+void no_op(void) {}
+void extend(void);
+
+
+
+static void (*action_table[])(void) = {
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, VGA_backspace, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, extend, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+    no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op, no_op,
+};
+
+void extend(void) {
+    action_table[read(PS2_DATA)]();
+}
+
+
 enum ReprState {
     BASIC, SHIFTED
 };
@@ -251,6 +293,7 @@ enum ReprState {
 #define UN_RSHIFT 0xb6
 #define UN_CAPSLOCK 0xba
 #define UN_BACKSPACE 0x8e
+#define EXTEND 0xe0
 // TODO implement tab - should backspace undo tab?
 
 
@@ -261,6 +304,8 @@ enum ReprState {
 
 
 // };
+
+
 
 void poll(void) {
     uint8_t input;
@@ -279,11 +324,10 @@ void poll(void) {
             capslock = !capslock;
         }
 
-        // TODO: move this to fun ptr lookup table
-        if (input == BACKSPACE) {
-            VGA_backspace();
-            continue;
-        }
+        //kprintf("\nextend = %p, action=%p, no_op=%p\n", extend, action_table[input], no_op);
+        action_table[input]();
+        // if (input == EXTEND)
+        //     continue;
 
         char c;
         if (state == BASIC) {

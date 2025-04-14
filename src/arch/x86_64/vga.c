@@ -5,6 +5,7 @@
 
 #define VGA_BASE 0xb8000
 #define LINE(X) ((X) / 80)
+#define COL(X) ((X) % 80)
 #define BLINK 0x80
 
 static unsigned short *const vgaBuff = (unsigned short *)VGA_BASE;
@@ -17,6 +18,22 @@ static const unsigned char error_color = FG(VGA_LIGHT_RED) | BG(VGA_BLACK);
 static const unsigned char debug_color = FG(VGA_LIGHT_GREEN) | BG(VGA_BLACK);
 static const unsigned short empty = ((FG(VGA_BLACK) | BG(VGA_BLACK)) << 8) | '\0';
 static const unsigned short blinking_cursor = ((BLINK | color) << 8) | ' ';
+static unsigned short underneath = empty;
+
+enum Direction {
+    UP = 0,
+    RIGHT = 1,
+    DOWN = 2,
+    LEFT = 3,
+};
+
+
+
+// VGA_move_cursor(int direction) {
+//     switch (direction) {
+//     case 
+//     }
+// }
 
 void scroll()
 {
@@ -106,7 +123,9 @@ void VGA_backspace(void)
 {
     int start_line, end_line;
     start_line = LINE(cursor);
-    vgaBuff[cursor] = empty;
+    vgaBuff[cursor] = underneath;
+    if (cursor > 0)
+        cursor--;
 
     // find previous nonempty (which could be a space) or else 0
     while (cursor > 0 && vgaBuff[cursor] == empty)
