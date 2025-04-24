@@ -111,7 +111,7 @@ void keyboard_init() {
 
     // set config
     struct config c = *((struct config *)&config_data);
-    c.interrupt_port1 = 1; //
+    c.interrupt_port1 = 0; //
     c.interrupt_port2 = 0;
     c.sysflag = 1;
     c.zero1 = 0;

@@ -4,28 +4,44 @@
 #include "kprint.h"
 #include "string.h"
 #include "keyboard.h"
+#include "idt.h"
+#include "irq.h"
 
 void kmain(void)
 {
-	VGA_clear();
-
+	CLI;
 	
+#ifdef debug
+	int j;
+	j=1;
+	while(j);
+#endif
+	idt_init();
+	IRQ_init();
+
+	// __asm__ volatile ("int $0x20");
+	int * silly = (int *)-1;
+	*silly = 3;
+
+	// j=1;
+	// while(j);
+	VGA_clear();
 	keyboard_init();
 	poll();
 	
 
 
-	/*
+	
 
-	char s[] = "Turtles";
-	for (int i = 0; i < 400; i++)
-	{
-		VGA_display_str(s, DEBUG);
-		// kprintf("%s",s);
-		for (long long i = 0; i < 1999999; i++)
-			;
-	}
-
+	// char s[] = "Turtles";
+	// for (int i = 0; i < 400; i++)
+	// {
+	// 	VGA_display_str(s, DEBUG);
+	// 	// kprintf("%s",s);
+	// 	for (long long i = 0; i < 1999999; i++)
+	// 		;
+	// }
+/*
 	int count = 0;
 	kprintf("%c\n", 'a');				  // should be "a"
 	kprintf("%c\n", 'Q');				  // should be "Q"
@@ -33,7 +49,9 @@ void kmain(void)
 	kprintf("%s\n", "test string");		  // "test string"
 	kprintf("foo%sbar\n", "blah");		  // "fooblahbar"
 	kprintf("foo%%sbar\n");				  // "foo%bar" SHOULDN'T IT BE foo%sbar??
+	kprintf("BEFORE\n");
 	kprintf("%d\n", INT_MIN);			  // "-2147483648"
+	kprintf("AFTER\n");
 	kprintf("%d\n", INT_MAX);			  // "2147483647"
 	kprintf("%u\n", 0);					  // "0"
 	kprintf("%u\n", UINT_MAX);			  // "4294967295"
@@ -52,8 +70,8 @@ void kmain(void)
 
 	count = kprintf("%qu, %hd, %s stuffstuffstuff %x\n", (unsigned long long)ULONG_MAX, 0x7FFF, "blah", 0xca11ab1e);
 	kprintf("count = %d\n", count);
-	*/
 	
+	*/
 
 	// kprintf("%f", 3.14); //WEIRD: it all starts over when this runs!
 
