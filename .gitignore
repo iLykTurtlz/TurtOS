@@ -1,2 +1,4 @@
 build/*
 *.o
+.gdbinit
+.gdb_history

@@ -17,12 +17,12 @@ void IRQ_set_mask(uint8_t IRQline);
 void IRQ_clear_mask(uint8_t IRQline);
 // void IRQ_get_mask(uint8_t irq); //void really?
 
-typedef void (*irq_callback)(uint64_t, uint8_t, void*);
+typedef void (*irq_callback)(uint8_t, uint32_t, void*);
 
 
 
-void IRQ_set_handler(uint64_t irq, irq_callback cb, void *arg);
-void IRQ_call(uint64_t irq, uint8_t error);
+void IRQ_set_handler(uint8_t irq, irq_callback cb, void *arg);
+void IRQ_call(uint8_t irq, uint32_t error);
 
 
 

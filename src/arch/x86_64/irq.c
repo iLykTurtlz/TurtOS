@@ -151,20 +151,26 @@ struct irq_entry {
 
 //irq_h[irq].cb(irq, err, irq_h[irq.arg])
 
-void IRQ_set_handler(uint64_t irq, irq_callback cb, void *arg)
+void IRQ_set_handler(uint8_t irq, irq_callback cb, void *arg)
 {
     irq_h[irq].cb = cb;
     irq_h[irq].arg = arg;
 }
 
-void IRQ_call(uint64_t irq, uint8_t error)
+void IRQ_call(uint8_t irq, uint32_t error)
 {
     if (irq > IDT_MAX_DESCRIPTORS - 1) 
         return;
     if (irq_h[irq].cb != NULL) {
         irq_h[irq].cb(irq, error, irq_h[irq].arg);
     } else {
-        kprintf("Unhandled IRQ: %ld\n", irq);
+        kprintf("Unhandled IRQ: %d\n", irq);
+    }
+    if (0x20 <= irq && irq <= 0x2e) {
+        IRQ_end_of_interrupt(irq - 0x20);
     }
 }
+
+
+
 

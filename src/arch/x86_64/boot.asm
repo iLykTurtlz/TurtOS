@@ -1,5 +1,5 @@
 global start
-;global gdt64
+global gdt64
 extern long_mode_start
 
 section .text
@@ -10,7 +10,7 @@ start:
 
 	call check_multiboot
 	call check_cpuid
-	call check_long_mode ;Err2
+	call check_long_mode ;
 
 
 	call set_up_page_tables
@@ -181,6 +181,9 @@ gdt64:
 	; code sgmt | descriptorType1 | present | 64-bit
 	dq (1<<43) | (1<<44) | (1<<47) | (1<<53) ; 
 	; add dq's here for additional entries in GDT
+.tss
+	dq 0
+	dq 0
 .pointer:
 	dw $ - gdt64 - 1 ; current addr (.pointer) ???HUH???
 	dq gdt64

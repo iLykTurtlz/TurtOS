@@ -6,6 +6,7 @@
 #include "keyboard.h"
 #include "idt.h"
 #include "irq.h"
+#include "tss.h"
 
 void kmain(void)
 {
@@ -18,16 +19,29 @@ void kmain(void)
 #endif
 	idt_init();
 	IRQ_init();
+	IRQ_set_handler(0x21, handle_keyboard, 0);
+
+	for (int i=0; i<15; i++) {
+		if (i == 1)
+			continue;
+		IRQ_set_mask(i);
+	}
+
+	tss_init();
+	
+
+	STI;
+
 
 	// __asm__ volatile ("int $0x20");
-	int * silly = (int *)-1;
-	*silly = 3;
+	// int * silly = (int *)-1;
+	// *silly = 3;
 
 	// j=1;
 	// while(j);
-	VGA_clear();
-	keyboard_init();
-	poll();
+	// VGA_clear();
+	// keyboard_init();
+	// poll();
 	
 
 

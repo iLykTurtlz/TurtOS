@@ -154,7 +154,7 @@ void keyboard_init() {
     if (!handshake(PS2_DATA, SCAN_CODE(code), 2)) {
         VGA_display_str("Error setting scan code\n", ERROR);
     } else {
-        kprintf("Set scan code %d\n", code);
+        kprintf("Error setting scan code %d\n", code);
     }
 
     if (handshake(PS2_DATA, ENABLE_KEYBOARD, 2)) {
@@ -347,6 +347,55 @@ void poll(void) {
         if (c != 0) {
             kprintf("%c",c);
         }
+    }
+}
+
+struct keyboard_state {
+    enum ReprState state;
+    int capslock;
+} ks;
+
+
+
+
+
+void handle_keyboard(uint8_t irq, uint32_t err, void *arg)
+{
+
+    uint8_t input = read(PS2_DATA);
+    if (input == LSHIFT || input == RSHIFT) {
+        ks.state = SHIFTED;
+    }
+    else if (input == UN_LSHIFT || input == UN_RSHIFT) {
+        ks.state = BASIC;
+    }
+
+    if (input == UN_CAPSLOCK) {
+        ks.capslock = !ks.capslock;
+    }
+
+    //kprintf("\nextend = %p, action=%p, no_op=%p\n", extend, action_table[input], no_op);
+    action_table[input]();
+    // if (input == EXTEND)
+    //     continue;
+
+    char c;
+    if (ks.state == BASIC) {
+        c = basic_repr_table[input];
+    }
+    else if (ks.state == SHIFTED) {
+        c = shift_repr_table[input];
+    }
+    if (ks.capslock) {
+        if (islower(c)) {
+            c = toupper(c);
+        } 
+        else if (isupper(c)) {
+            c = tolower(c);
+        }
+    }
+    if (c != 0) {
+        kprintf("%c",c);
     }
 }
 
