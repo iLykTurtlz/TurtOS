@@ -1,10 +1,10 @@
 extern IRQ_call
 
 isr_0:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -21,17 +21,17 @@ isr_0:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_1:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -48,17 +48,17 @@ isr_1:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_2:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -75,17 +75,17 @@ isr_2:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_3:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -102,17 +102,17 @@ isr_3:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_4:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -129,17 +129,17 @@ isr_4:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_5:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -156,17 +156,17 @@ isr_5:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_6:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -183,17 +183,17 @@ isr_6:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_7:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -210,27 +210,31 @@ isr_7:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_8:
+    push rsi
     push rax
-	push rcx
-	push rdx
-	push rsi
-	push rdi
-	push r8
-	push r9
-	push r10
-	push r11
+    mov rsi, [rsp + 16]
+    mov rax, [rsp + 8]
+    mov [rsp + 16], rax
+    mov rax, [rsp]
+    mov [rsp + 8], rax
+    add rsp, 8
+    push rcx
+    push rdx
+    push rdi
+    push r8
+    push r9
+    push r10
+    push r11
 
     ; C args (irq, err)
     mov rdi, 8
-    mov rsi, [rsp]
-    add rsp, 8
 
     call IRQ_call
 
@@ -239,17 +243,17 @@ isr_8:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_9:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -266,27 +270,31 @@ isr_9:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_10:
+    push rsi
     push rax
-	push rcx
-	push rdx
-	push rsi
-	push rdi
-	push r8
-	push r9
-	push r10
-	push r11
+    mov rsi, [rsp + 16]
+    mov rax, [rsp + 8]
+    mov [rsp + 16], rax
+    mov rax, [rsp]
+    mov [rsp + 8], rax
+    add rsp, 8
+    push rcx
+    push rdx
+    push rdi
+    push r8
+    push r9
+    push r10
+    push r11
 
     ; C args (irq, err)
     mov rdi, 10
-    mov rsi, [rsp]
-    add rsp, 8
 
     call IRQ_call
 
@@ -295,27 +303,31 @@ isr_10:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_11:
+    push rsi
     push rax
-	push rcx
-	push rdx
-	push rsi
-	push rdi
-	push r8
-	push r9
-	push r10
-	push r11
+    mov rsi, [rsp + 16]
+    mov rax, [rsp + 8]
+    mov [rsp + 16], rax
+    mov rax, [rsp]
+    mov [rsp + 8], rax
+    add rsp, 8
+    push rcx
+    push rdx
+    push rdi
+    push r8
+    push r9
+    push r10
+    push r11
 
     ; C args (irq, err)
     mov rdi, 11
-    mov rsi, [rsp]
-    add rsp, 8
 
     call IRQ_call
 
@@ -324,27 +336,31 @@ isr_11:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_12:
+    push rsi
     push rax
-	push rcx
-	push rdx
-	push rsi
-	push rdi
-	push r8
-	push r9
-	push r10
-	push r11
+    mov rsi, [rsp + 16]
+    mov rax, [rsp + 8]
+    mov [rsp + 16], rax
+    mov rax, [rsp]
+    mov [rsp + 8], rax
+    add rsp, 8
+    push rcx
+    push rdx
+    push rdi
+    push r8
+    push r9
+    push r10
+    push r11
 
     ; C args (irq, err)
     mov rdi, 12
-    mov rsi, [rsp]
-    add rsp, 8
 
     call IRQ_call
 
@@ -353,27 +369,31 @@ isr_12:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_13:
+    push rsi
     push rax
-	push rcx
-	push rdx
-	push rsi
-	push rdi
-	push r8
-	push r9
-	push r10
-	push r11
+    mov rsi, [rsp + 16]
+    mov rax, [rsp + 8]
+    mov [rsp + 16], rax
+    mov rax, [rsp]
+    mov [rsp + 8], rax
+    add rsp, 8
+    push rcx
+    push rdx
+    push rdi
+    push r8
+    push r9
+    push r10
+    push r11
 
     ; C args (irq, err)
     mov rdi, 13
-    mov rsi, [rsp]
-    add rsp, 8
 
     call IRQ_call
 
@@ -382,27 +402,31 @@ isr_13:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_14:
+    push rsi
     push rax
-	push rcx
-	push rdx
-	push rsi
-	push rdi
-	push r8
-	push r9
-	push r10
-	push r11
+    mov rsi, [rsp + 16]
+    mov rax, [rsp + 8]
+    mov [rsp + 16], rax
+    mov rax, [rsp]
+    mov [rsp + 8], rax
+    add rsp, 8
+    push rcx
+    push rdx
+    push rdi
+    push r8
+    push r9
+    push r10
+    push r11
 
     ; C args (irq, err)
     mov rdi, 14
-    mov rsi, [rsp]
-    add rsp, 8
 
     call IRQ_call
 
@@ -411,17 +435,17 @@ isr_14:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_15:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -438,17 +462,17 @@ isr_15:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_16:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -465,27 +489,31 @@ isr_16:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_17:
+    push rsi
     push rax
-	push rcx
-	push rdx
-	push rsi
-	push rdi
-	push r8
-	push r9
-	push r10
-	push r11
+    mov rsi, [rsp + 16]
+    mov rax, [rsp + 8]
+    mov [rsp + 16], rax
+    mov rax, [rsp]
+    mov [rsp + 8], rax
+    add rsp, 8
+    push rcx
+    push rdx
+    push rdi
+    push r8
+    push r9
+    push r10
+    push r11
 
     ; C args (irq, err)
     mov rdi, 17
-    mov rsi, [rsp]
-    add rsp, 8
 
     call IRQ_call
 
@@ -494,17 +522,17 @@ isr_17:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_18:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -521,17 +549,17 @@ isr_18:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_19:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -548,17 +576,17 @@ isr_19:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_20:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -575,17 +603,17 @@ isr_20:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_21:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -602,17 +630,17 @@ isr_21:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_22:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -629,17 +657,17 @@ isr_22:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_23:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -656,17 +684,17 @@ isr_23:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_24:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -683,17 +711,17 @@ isr_24:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_25:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -710,17 +738,17 @@ isr_25:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_26:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -737,17 +765,17 @@ isr_26:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_27:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -764,17 +792,17 @@ isr_27:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_28:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -791,17 +819,17 @@ isr_28:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_29:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -818,27 +846,31 @@ isr_29:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_30:
+    push rsi
     push rax
-	push rcx
-	push rdx
-	push rsi
-	push rdi
-	push r8
-	push r9
-	push r10
-	push r11
+    mov rsi, [rsp + 16]
+    mov rax, [rsp + 8]
+    mov [rsp + 16], rax
+    mov rax, [rsp]
+    mov [rsp + 8], rax
+    add rsp, 8
+    push rcx
+    push rdx
+    push rdi
+    push r8
+    push r9
+    push r10
+    push r11
 
     ; C args (irq, err)
     mov rdi, 30
-    mov rsi, [rsp]
-    add rsp, 8
 
     call IRQ_call
 
@@ -847,17 +879,17 @@ isr_30:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_31:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -874,17 +906,17 @@ isr_31:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_32:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -901,17 +933,17 @@ isr_32:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_33:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -928,17 +960,17 @@ isr_33:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_34:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -955,17 +987,17 @@ isr_34:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_35:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -982,17 +1014,17 @@ isr_35:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_36:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1009,17 +1041,17 @@ isr_36:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_37:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1036,17 +1068,17 @@ isr_37:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_38:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1063,17 +1095,17 @@ isr_38:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_39:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1090,17 +1122,17 @@ isr_39:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_40:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1117,17 +1149,17 @@ isr_40:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_41:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1144,17 +1176,17 @@ isr_41:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_42:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1171,17 +1203,17 @@ isr_42:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_43:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1198,17 +1230,17 @@ isr_43:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_44:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1225,17 +1257,17 @@ isr_44:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_45:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1252,17 +1284,17 @@ isr_45:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_46:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1279,17 +1311,17 @@ isr_46:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_47:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1306,17 +1338,17 @@ isr_47:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_48:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1333,17 +1365,17 @@ isr_48:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_49:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1360,17 +1392,17 @@ isr_49:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_50:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1387,17 +1419,17 @@ isr_50:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_51:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1414,17 +1446,17 @@ isr_51:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_52:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1441,17 +1473,17 @@ isr_52:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_53:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1468,17 +1500,17 @@ isr_53:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_54:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1495,17 +1527,17 @@ isr_54:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_55:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1522,17 +1554,17 @@ isr_55:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_56:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1549,17 +1581,17 @@ isr_56:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_57:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1576,17 +1608,17 @@ isr_57:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_58:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1603,17 +1635,17 @@ isr_58:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_59:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1630,17 +1662,17 @@ isr_59:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_60:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1657,17 +1689,17 @@ isr_60:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_61:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1684,17 +1716,17 @@ isr_61:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_62:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1711,17 +1743,17 @@ isr_62:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_63:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1738,17 +1770,17 @@ isr_63:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_64:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1765,17 +1797,17 @@ isr_64:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_65:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1792,17 +1824,17 @@ isr_65:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_66:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1819,17 +1851,17 @@ isr_66:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_67:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1846,17 +1878,17 @@ isr_67:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_68:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1873,17 +1905,17 @@ isr_68:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_69:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1900,17 +1932,17 @@ isr_69:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_70:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1927,17 +1959,17 @@ isr_70:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_71:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1954,17 +1986,17 @@ isr_71:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_72:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -1981,17 +2013,17 @@ isr_72:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_73:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2008,17 +2040,17 @@ isr_73:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_74:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2035,17 +2067,17 @@ isr_74:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_75:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2062,17 +2094,17 @@ isr_75:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_76:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2089,17 +2121,17 @@ isr_76:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_77:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2116,17 +2148,17 @@ isr_77:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_78:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2143,17 +2175,17 @@ isr_78:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_79:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2170,17 +2202,17 @@ isr_79:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_80:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2197,17 +2229,17 @@ isr_80:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_81:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2224,17 +2256,17 @@ isr_81:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_82:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2251,17 +2283,17 @@ isr_82:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_83:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2278,17 +2310,17 @@ isr_83:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_84:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2305,17 +2337,17 @@ isr_84:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_85:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2332,17 +2364,17 @@ isr_85:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_86:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2359,17 +2391,17 @@ isr_86:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_87:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2386,17 +2418,17 @@ isr_87:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_88:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2413,17 +2445,17 @@ isr_88:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_89:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2440,17 +2472,17 @@ isr_89:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_90:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2467,17 +2499,17 @@ isr_90:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_91:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2494,17 +2526,17 @@ isr_91:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_92:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2521,17 +2553,17 @@ isr_92:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_93:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2548,17 +2580,17 @@ isr_93:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_94:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2575,17 +2607,17 @@ isr_94:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_95:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2602,17 +2634,17 @@ isr_95:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_96:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2629,17 +2661,17 @@ isr_96:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_97:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2656,17 +2688,17 @@ isr_97:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_98:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2683,17 +2715,17 @@ isr_98:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_99:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2710,17 +2742,17 @@ isr_99:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_100:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2737,17 +2769,17 @@ isr_100:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_101:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2764,17 +2796,17 @@ isr_101:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_102:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2791,17 +2823,17 @@ isr_102:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_103:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2818,17 +2850,17 @@ isr_103:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_104:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2845,17 +2877,17 @@ isr_104:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_105:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2872,17 +2904,17 @@ isr_105:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_106:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2899,17 +2931,17 @@ isr_106:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_107:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2926,17 +2958,17 @@ isr_107:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_108:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2953,17 +2985,17 @@ isr_108:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_109:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -2980,17 +3012,17 @@ isr_109:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_110:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3007,17 +3039,17 @@ isr_110:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_111:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3034,17 +3066,17 @@ isr_111:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_112:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3061,17 +3093,17 @@ isr_112:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_113:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3088,17 +3120,17 @@ isr_113:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_114:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3115,17 +3147,17 @@ isr_114:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_115:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3142,17 +3174,17 @@ isr_115:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_116:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3169,17 +3201,17 @@ isr_116:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_117:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3196,17 +3228,17 @@ isr_117:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_118:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3223,17 +3255,17 @@ isr_118:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_119:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3250,17 +3282,17 @@ isr_119:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_120:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3277,17 +3309,17 @@ isr_120:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_121:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3304,17 +3336,17 @@ isr_121:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_122:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3331,17 +3363,17 @@ isr_122:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_123:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3358,17 +3390,17 @@ isr_123:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_124:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3385,17 +3417,17 @@ isr_124:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_125:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3412,17 +3444,17 @@ isr_125:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_126:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3439,17 +3471,17 @@ isr_126:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_127:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3466,17 +3498,17 @@ isr_127:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_128:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3493,17 +3525,17 @@ isr_128:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_129:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3520,17 +3552,17 @@ isr_129:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_130:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3547,17 +3579,17 @@ isr_130:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_131:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3574,17 +3606,17 @@ isr_131:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_132:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3601,17 +3633,17 @@ isr_132:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_133:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3628,17 +3660,17 @@ isr_133:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_134:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3655,17 +3687,17 @@ isr_134:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_135:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3682,17 +3714,17 @@ isr_135:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_136:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3709,17 +3741,17 @@ isr_136:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_137:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3736,17 +3768,17 @@ isr_137:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_138:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3763,17 +3795,17 @@ isr_138:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_139:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3790,17 +3822,17 @@ isr_139:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_140:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3817,17 +3849,17 @@ isr_140:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_141:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3844,17 +3876,17 @@ isr_141:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_142:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3871,17 +3903,17 @@ isr_142:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_143:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3898,17 +3930,17 @@ isr_143:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_144:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3925,17 +3957,17 @@ isr_144:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_145:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3952,17 +3984,17 @@ isr_145:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_146:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -3979,17 +4011,17 @@ isr_146:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_147:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4006,17 +4038,17 @@ isr_147:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_148:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4033,17 +4065,17 @@ isr_148:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_149:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4060,17 +4092,17 @@ isr_149:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_150:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4087,17 +4119,17 @@ isr_150:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_151:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4114,17 +4146,17 @@ isr_151:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_152:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4141,17 +4173,17 @@ isr_152:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_153:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4168,17 +4200,17 @@ isr_153:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_154:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4195,17 +4227,17 @@ isr_154:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_155:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4222,17 +4254,17 @@ isr_155:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_156:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4249,17 +4281,17 @@ isr_156:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_157:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4276,17 +4308,17 @@ isr_157:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_158:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4303,17 +4335,17 @@ isr_158:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_159:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4330,17 +4362,17 @@ isr_159:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_160:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4357,17 +4389,17 @@ isr_160:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_161:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4384,17 +4416,17 @@ isr_161:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_162:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4411,17 +4443,17 @@ isr_162:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_163:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4438,17 +4470,17 @@ isr_163:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_164:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4465,17 +4497,17 @@ isr_164:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_165:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4492,17 +4524,17 @@ isr_165:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_166:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4519,17 +4551,17 @@ isr_166:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_167:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4546,17 +4578,17 @@ isr_167:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_168:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4573,17 +4605,17 @@ isr_168:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_169:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4600,17 +4632,17 @@ isr_169:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_170:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4627,17 +4659,17 @@ isr_170:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_171:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4654,17 +4686,17 @@ isr_171:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_172:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4681,17 +4713,17 @@ isr_172:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_173:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4708,17 +4740,17 @@ isr_173:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_174:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4735,17 +4767,17 @@ isr_174:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_175:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4762,17 +4794,17 @@ isr_175:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_176:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4789,17 +4821,17 @@ isr_176:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_177:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4816,17 +4848,17 @@ isr_177:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_178:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4843,17 +4875,17 @@ isr_178:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_179:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4870,17 +4902,17 @@ isr_179:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_180:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4897,17 +4929,17 @@ isr_180:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_181:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4924,17 +4956,17 @@ isr_181:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_182:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4951,17 +4983,17 @@ isr_182:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_183:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -4978,17 +5010,17 @@ isr_183:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_184:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5005,17 +5037,17 @@ isr_184:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_185:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5032,17 +5064,17 @@ isr_185:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_186:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5059,17 +5091,17 @@ isr_186:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_187:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5086,17 +5118,17 @@ isr_187:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_188:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5113,17 +5145,17 @@ isr_188:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_189:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5140,17 +5172,17 @@ isr_189:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_190:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5167,17 +5199,17 @@ isr_190:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_191:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5194,17 +5226,17 @@ isr_191:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_192:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5221,17 +5253,17 @@ isr_192:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_193:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5248,17 +5280,17 @@ isr_193:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_194:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5275,17 +5307,17 @@ isr_194:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_195:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5302,17 +5334,17 @@ isr_195:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_196:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5329,17 +5361,17 @@ isr_196:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_197:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5356,17 +5388,17 @@ isr_197:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_198:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5383,17 +5415,17 @@ isr_198:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_199:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5410,17 +5442,17 @@ isr_199:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_200:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5437,17 +5469,17 @@ isr_200:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_201:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5464,17 +5496,17 @@ isr_201:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_202:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5491,17 +5523,17 @@ isr_202:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_203:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5518,17 +5550,17 @@ isr_203:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_204:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5545,17 +5577,17 @@ isr_204:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_205:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5572,17 +5604,17 @@ isr_205:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_206:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5599,17 +5631,17 @@ isr_206:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_207:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5626,17 +5658,17 @@ isr_207:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_208:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5653,17 +5685,17 @@ isr_208:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_209:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5680,17 +5712,17 @@ isr_209:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_210:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5707,17 +5739,17 @@ isr_210:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_211:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5734,17 +5766,17 @@ isr_211:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_212:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5761,17 +5793,17 @@ isr_212:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_213:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5788,17 +5820,17 @@ isr_213:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_214:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5815,17 +5847,17 @@ isr_214:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_215:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5842,17 +5874,17 @@ isr_215:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_216:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5869,17 +5901,17 @@ isr_216:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_217:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5896,17 +5928,17 @@ isr_217:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_218:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5923,17 +5955,17 @@ isr_218:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_219:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5950,17 +5982,17 @@ isr_219:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_220:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -5977,17 +6009,17 @@ isr_220:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_221:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6004,17 +6036,17 @@ isr_221:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_222:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6031,17 +6063,17 @@ isr_222:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_223:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6058,17 +6090,17 @@ isr_223:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_224:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6085,17 +6117,17 @@ isr_224:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_225:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6112,17 +6144,17 @@ isr_225:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_226:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6139,17 +6171,17 @@ isr_226:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_227:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6166,17 +6198,17 @@ isr_227:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_228:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6193,17 +6225,17 @@ isr_228:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_229:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6220,17 +6252,17 @@ isr_229:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_230:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6247,17 +6279,17 @@ isr_230:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_231:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6274,17 +6306,17 @@ isr_231:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_232:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6301,17 +6333,17 @@ isr_232:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_233:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6328,17 +6360,17 @@ isr_233:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_234:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6355,17 +6387,17 @@ isr_234:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_235:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6382,17 +6414,17 @@ isr_235:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_236:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6409,17 +6441,17 @@ isr_236:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_237:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6436,17 +6468,17 @@ isr_237:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_238:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6463,17 +6495,17 @@ isr_238:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_239:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6490,17 +6522,17 @@ isr_239:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_240:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6517,17 +6549,17 @@ isr_240:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_241:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6544,17 +6576,17 @@ isr_241:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_242:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6571,17 +6603,17 @@ isr_242:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_243:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6598,17 +6630,17 @@ isr_243:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_244:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6625,17 +6657,17 @@ isr_244:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_245:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6652,17 +6684,17 @@ isr_245:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_246:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6679,17 +6711,17 @@ isr_246:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_247:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6706,17 +6738,17 @@ isr_247:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_248:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6733,17 +6765,17 @@ isr_248:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_249:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6760,17 +6792,17 @@ isr_249:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_250:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6787,17 +6819,17 @@ isr_250:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_251:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6814,17 +6846,17 @@ isr_251:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_252:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6841,17 +6873,17 @@ isr_252:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_253:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6868,17 +6900,17 @@ isr_253:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_254:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6895,17 +6927,17 @@ isr_254:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 isr_255:
-    push rax
+    push rsi
+	push rax
 	push rcx
 	push rdx
-	push rsi
 	push rdi
 	push r8
 	push r9
@@ -6922,10 +6954,10 @@ isr_255:
 	pop r9
 	pop r8
 	pop rdi
-	pop rsi
 	pop rdx
 	pop rcx
 	pop rax
+	pop rsi
     iretq
 
 global isr_stub_table

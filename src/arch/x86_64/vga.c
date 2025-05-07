@@ -1,5 +1,6 @@
 #include "vga.h"
 #include "memory.h"
+#include "irq.h"
 
 #define TAB_SIZE 4
 
@@ -20,6 +21,7 @@ static const unsigned short empty = ((FG(VGA_BLACK) | BG(VGA_BLACK)) << 8) | '\0
 static const unsigned short blinking_cursor = ((BLINK | color) << 8) | ' ';
 static unsigned short underneath = empty;
 
+
 enum Direction {
     UP = 0,
     RIGHT = 1,
@@ -35,6 +37,14 @@ enum Direction {
 //     }
 // }
 
+void VGA_clear(void)
+{
+    memset(vgaBuff, (char)empty, height * width * sizeof(unsigned short));
+    cursor = 0;
+    vgaBuff[cursor] = blinking_cursor;
+}
+
+
 void scroll()
 {
     size_t i;
@@ -48,6 +58,12 @@ void scroll()
 
 void VGA_display_char(char c, unsigned char col)
 {
+    int enable_ints = 0;
+    if (interrupts_enabled()) {
+        enable_ints = 1;
+        CLI;
+    }
+
     static int previous_tab = 0;
     if (c == '\n')
     {
@@ -83,13 +99,12 @@ void VGA_display_char(char c, unsigned char col)
     if (cursor >= width * height)
         scroll();
     vgaBuff[cursor] = blinking_cursor;
+
+    if (enable_ints)
+        STI;
 }
 
-void VGA_clear(void)
-{
-    memset(vgaBuff, (char)empty, height * width * sizeof(unsigned short));
-    cursor = 0;
-}
+
 
 void VGA_display_str(const char *s, int level)
 {

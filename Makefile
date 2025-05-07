@@ -2,7 +2,7 @@ arch ?= x86_64
 kernel := build/kernel-$(arch).bin
 ext2_img := build/os-$(arch).img
 debug_option := -d int
-CFLAGS := -g -Wall -Werror -ffreestanding
+CFLAGS := -g -Wall -ffreestanding -mno-red-zone
 
 
 create_disk_image := ./create_disk_image.sh
@@ -24,7 +24,7 @@ clean:
 	rm -r build
 
 run: $(ext2_img)
-	qemu-system-x86_64 -drive format=raw,file=$(ext2_img)
+	qemu-system-x86_64 -drive format=raw,file=$(ext2_img) -serial stdio
 
 debug: CFLAGS += -Ddebug
 debug: clean $(ext2_img) 

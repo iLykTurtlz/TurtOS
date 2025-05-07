@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#define TSS_OFFSET_KERNEL_CODE 12
+#define TSS_OFFSET_KERNEL_CODE 16
 #define STACK_SIZE 65536
 
 typedef struct {
@@ -34,9 +34,9 @@ static struct {
     uint16_t io_map_base_address;
 } __attribute__((packed)) tss;
 
-extern uint64_t gdt64[];
+extern uint64_t gdt64[]; 
 
-tss_descriptor_t *tss_descriptor = (tss_descriptor_t *)(gdt64 + 2);
+tss_descriptor_t *tss_descriptor = (tss_descriptor_t *)(gdt64 + 2); //
 
 static char stack1[STACK_SIZE];
 static char stack2[STACK_SIZE];
@@ -71,13 +71,13 @@ void tss_init() {
     tss_descriptor->zero2 = 0;
     
     // fill out tss
-    tss.ist[0] = (uint64_t)&stack1[STACK_SIZE - 1];
-    tss.ist[1] = (uint64_t)&stack2[STACK_SIZE - 1];
-    tss.ist[2] = (uint64_t)&stack3[STACK_SIZE - 1];
+    tss.ist[0] = (uint64_t)&stack1[STACK_SIZE];
+    tss.ist[1] = (uint64_t)&stack2[STACK_SIZE];
+    tss.ist[2] = (uint64_t)&stack3[STACK_SIZE];
 
 
     // ???
-    tss.rsp[0] = (uint64_t)&stack1[STACK_SIZE - 1]; // ???
+    tss.rsp[0] = (uint64_t)&stack1[STACK_SIZE]; // ???
     tss.reserved1 = 0;
     tss.reserved2 = 0;
     tss.reserved3 = 0;
@@ -87,5 +87,5 @@ void tss_init() {
 
     uint16_t tss_selector = TSS_OFFSET_KERNEL_CODE;
     // ltr instruction
-    __asm__ volatile ("ltr %0" : : "m"(tss_selector));
+    __asm__ volatile ("ltr %0" : : "m"(tss_selector)); //offset in bytes
 }

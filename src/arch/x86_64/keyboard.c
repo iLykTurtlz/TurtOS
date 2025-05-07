@@ -4,6 +4,9 @@
 #include "vga.h"
 #include "kprint.h"
 #include "string.h"
+#include "serial.h"
+#include "irq.h"
+// #include "irq.h"
 
 #define PS2_DATA 0x60
 #define PS2_CMD 0x64
@@ -40,13 +43,18 @@
 /* driver parameters */
 #define COMMAND_QUEUE_SIZE 64
 
-enum State {
-    INIT,
-    SCAN,
-    IGNORE,
-    COMMAND,
-    STOP,
-};
+
+
+
+
+
+// enum State {
+//     INIT,
+//     SCAN,
+//     IGNORE,
+//     COMMAND,
+//     STOP,
+// };
 
 
 struct config {
@@ -111,7 +119,7 @@ void keyboard_init() {
 
     // set config
     struct config c = *((struct config *)&config_data);
-    c.interrupt_port1 = 0; //
+    c.interrupt_port1 = 1; //needs to be 1!!!
     c.interrupt_port2 = 0;
     c.sysflag = 1;
     c.zero1 = 0;
@@ -162,6 +170,11 @@ void keyboard_init() {
     } else {
         VGA_display_str("Error enabling keyboard\n", ERROR);
     }
+
+    
+    IRQ_set_handler(0x21, handle_keyboard, 0);
+    IRQ_clear_mask(1);
+
 }
 
 struct command_queue {
@@ -398,6 +411,24 @@ void handle_keyboard(uint8_t irq, uint32_t err, void *arg)
         kprintf("%c",c);
     }
 }
+
+
+
+
+
+
+
+// void writeNOW(uint8_t irq, uint32_t err, void *arg) {
+//     consume((struct char_circular_queue *)arg);
+// }
+
+// void serial_keyboard_init() {
+//     char_circular_queue_init(&SerialState.serial_buffer, serial_write);
+//     IRQ_set_handler(0x21, handle_serial, NULL);
+//     IRQ_set_handler(0x24, writeNOW, &SerialState.serial_buffer);
+//     // need to hook up consumer
+//     //IRQ_set_handler(0x21, handle_keyboard, 0);
+// }
 
 
 

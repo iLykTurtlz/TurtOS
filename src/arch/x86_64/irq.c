@@ -1,4 +1,5 @@
 #include "irq.h"
+#include <stdint.h>
 
 
 
@@ -79,15 +80,19 @@ void PIC_remap(int offset1, int offset2)
 	outb(PIC2_DATA, 0);
 }
 
-void IRQ_init(void)
-{
-    PIC_remap(IRQ_0, IRQ_8);
-}
 
 
+// a
 void pic_disable(void) {
     outb(PIC1_DATA, 0xff);
     outb(PIC2_DATA, 0xff);
+}
+
+void IRQ_init(void)
+{
+    pic_disable();
+    PIC_remap(IRQ_0, IRQ_8);
+    
 }
 
 void IRQ_set_mask(uint8_t IRQline) {
@@ -170,6 +175,44 @@ void IRQ_call(uint8_t irq, uint32_t error)
         IRQ_end_of_interrupt(irq - 0x20);
     }
 }
+
+/*
+ 	CF 	Carry Flag
+1 	1 	Reserved
+2 	PF 	Parity Flag
+3 	0 	Reserved
+4 	AF 	Auxiliary Carry Flag
+5 	0 	Reserved
+6 	ZF 	Zero Flag
+7 	SF 	Sign Flag
+8 	TF 	Trap Flag
+9 	IF 	Interrupt Enable Flag
+10 	DF 	Direction Flag
+11 	OF 	Overflow Flag
+12-13 	IOPL 	I/O Privilege Level
+14 	NT 	Nested Task
+15 	0 	Reserved
+16 	RF 	Resume Flag
+17 	VM 	Virtual-8086 Mode
+18 	AC 	Alignment Check / Access Control
+19 	VIF 	Virtual Interrupt Flag
+20 	VIP 	Virtual Interrupt Pending
+21 	ID 	ID Flag 
+*/
+
+static inline uint64_t get_flags()
+{
+    uint64_t flags;
+    asm __volatile__("pushfq; pop %0" : "=r"(flags));
+    return flags;
+}
+
+int interrupts_enabled()
+{
+    return (get_flags() & 0x200) > 0;
+}
+
+
 
 
 

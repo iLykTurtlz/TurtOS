@@ -9,6 +9,7 @@
 #define STI __asm__ volatile("sti");
 
 
+int interrupts_enabled();
 
 void IRQ_init(void); //remap interrupts
 void IRQ_end_of_interrupt(uint8_t irq);

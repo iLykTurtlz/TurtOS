@@ -3,6 +3,14 @@
 
 #define GDT_OFFSET_KERNEL_CODE 8 // ???????, 0x08????
 
+#define DOUBLE_FAULT 8
+#define GENERAL_PROTECTION_FAULT 13
+#define PAGE_FAULT 14
+
+#define DF_STACK 1
+#define GPF_STACK 2
+#define PF_STACK 3
+
 
 struct idt_entry {
 	uint16_t isr_low;      // The lower 16 bits of the ISR's address
@@ -47,7 +55,16 @@ void idt_set_descriptor(uint8_t vector, void *isr, uint8_t type)
     struct idt_entry *descriptor = &idt[vector];
     descriptor->isr_low = (uint64_t)isr & 0xffff;
     descriptor->target_selector = GDT_OFFSET_KERNEL_CODE;
-    descriptor->ist = 0; //for now??
+
+    if (vector == PAGE_FAULT)
+        descriptor->ist = PF_STACK;
+    else if (vector == DOUBLE_FAULT)
+        descriptor->ist = DF_STACK;
+    else if (vector == GENERAL_PROTECTION_FAULT)
+        descriptor->ist = GPF_STACK;
+    else
+        descriptor->ist = 0;
+
     descriptor->reserved1 = 0; //??
     descriptor->type = type; // 0xe interrupt, 0xf trap
     descriptor->zero = 0;

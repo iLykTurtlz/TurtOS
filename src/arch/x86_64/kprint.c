@@ -1,6 +1,7 @@
 #include <stdarg.h>
 #include "string.h"
 #include "vga.h"
+#include "serial.h"
 #include <stdint.h>
 
 #define HEX 16
@@ -39,7 +40,9 @@
         buf[j] = '\0';                    \
         strreverse(buf);                  \
         VGA_display_str(buf, INFO);       \
-        return strlen(buf);               \
+        int result = strlen(buf); \
+        serial_write(buf, result);\
+        return result;               \
     }
 
 PRINT_NUM(short, short, SIGNED)
@@ -226,10 +229,12 @@ void print_error(const char *str)
 void print_char(char c)
 {
     VGA_display_char(c, FG(VGA_WHITE) | BG(VGA_BLACK));
+    serial_write(&c, 1);
 }
 
 int print_str(const char *str)
 {
     VGA_display_str(str, INFO);
+    serial_write(str, strlen(str));
     return strlen(str);
 }

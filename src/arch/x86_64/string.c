@@ -45,8 +45,8 @@ char *strcat(char *restrict dst, const char *restrict src)
 
 char *strreverse(char *s)
 {
-	/* reverses the string in place, returns the same pointer */
-	/* can only be called on writeable strings */
+	// reverses the string in place, returns the same pointer 
+	// can only be called on writeable strings 
 	char *lptr = s, *rptr = s + (strlen(s) - 1);
 	while (lptr < rptr)
 	{

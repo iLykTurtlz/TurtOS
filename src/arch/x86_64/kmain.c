@@ -7,6 +7,7 @@
 #include "idt.h"
 #include "irq.h"
 #include "tss.h"
+#include "serial.h"
 
 void kmain(void)
 {
@@ -17,23 +18,57 @@ void kmain(void)
 	j=1;
 	while(j);
 #endif
+
 	idt_init();
-	IRQ_init();
-	IRQ_set_handler(0x21, handle_keyboard, 0);
-
-	for (int i=0; i<15; i++) {
-		if (i == 1)
-			continue;
-		IRQ_set_mask(i);
-	}
-
-	tss_init();
+	IRQ_init(); //sets mask for each PIC interrupt
 	
+	
+	tss_init();
+	serial_init();
+	// serial_keyboard_init();
 
+	// turns out keyboard_init needs to be last
+	keyboard_init(); //unmasks 1
+
+	IRQ_set_mask(0);
+	
+	// for (int i=0; i<15; i++) {
+	// 	if (i == 1 || i == 4) { //COM1 is IRQ4, PS2 is IRQ1
+	// 		IRQ_clear_mask(i);
+	// 	} else {
+	// 		IRQ_set_mask(i);
+	// 	}
+	// }
 	STI;
 
+	// char *words = "dfgjklsdfghjkladhsjfkhasdklfjklahsdkf sadfjklsadfjkl";
+	// serial_write(words, 20);
+	//serial_write('X');
 
-	// __asm__ volatile ("int $0x20");
+
+	// unmask here
+	// int serial_faulty = serial_init();
+	// kprintf("Serial faulty: |%d|\n", serial_faulty);
+	// serial_keyboard_init();
+	
+	
+	// serial_write('X');
+	
+	// serial_write('b');
+	
+
+
+	
+	
+
+	// int *big_addr = (int *)-1;
+	// *big_addr = 3;
+
+
+	
+
+
+	// // __asm__ volatile ("int $0x20");
 	// int * silly = (int *)-1;
 	// *silly = 3;
 
