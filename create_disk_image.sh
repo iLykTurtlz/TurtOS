@@ -8,12 +8,12 @@ BLOCK_SIZE=512
 NB_BLOCKS=32648 #16MB in powers of 2
 dd if=/dev/zero of="$1" bs="$BLOCK_SIZE" count="$NB_BLOCKS"
 parted $1 mklabel msdos
-parted $1 mkpart primary ext2 2048s 30720s
+parted $1 mkpart primary ext2 2048s 30600s #not hardcode
 parted $1 set 1 boot on
 max_loopback=$(losetup | grep -o '/dev/loop[0-9]\+' | sed 's/\/dev\/loop//' | sort -n | tail -1)
 N0=$(($max_loopback+1))
 N1=$(($max_loopback+2))
-sudo losetup /dev/loop"$N0" $1
+sudo losetup /dev/loop"$N0" $1 #grub is the only one that needs this
 sudo losetup /dev/loop"$N1" $1 -o 1048576
 sudo mkfs.ext2 /dev/loop"$N1"
 mkdir -p /mnt/osfiles

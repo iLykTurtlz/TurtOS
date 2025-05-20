@@ -5,6 +5,9 @@ extern long_mode_start
 section .text
 bits 32
 start:
+	; store pointer to multiboot2 start in edi (parameter to kmain)
+	mov edi, ebx
+	
 	; initialize stack pointer
 	mov esp, stack_top
 
@@ -110,7 +113,7 @@ set_up_page_tables:
 	or eax, 0b11 ; present and writeable
 	mov [p3_table], eax
 
-	; map each P2 entry to a huge 2MiB page
+	; map each P2 entry to a huge 2MiB page ; quick way without many pages ; 4096
 	mov ecx, 0			; counter
 
 .map_p2_table:

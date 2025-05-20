@@ -43,7 +43,7 @@
 
 
 
-#define SERIAL_BUFFER_SIZE 64
+#define SERIAL_BUFFER_SIZE 4096
 MAKE_CIRCULAR_QUEUE(char, SERIAL_BUFFER_SIZE)
 // struct char_circular_queue;
 // void char_circular_queue_init(struct char_circular_queue *q, void (*consume_next)(char));
@@ -96,6 +96,11 @@ void handle_serial(uint8_t irq, uint32_t error, void *arg) {
 
 int serial_write(const char *buff, int len) {
     size_t i=0;
+    uint64_t rflags;
+    // asm ("mov %0 %%rflags" : "=r"(rflags)); //read RFLAGS - check if interrupts on, then only re-enable if they were on.
+    asm ("pushfq; pop %0" : "=r"(rflags));
+    int interrupts_enabled = (rflags >> 9) & 1;
+    // same for printk
     CLI;
     while (i < len && !state.serial_buffer.is_full) {
         
@@ -108,7 +113,8 @@ int serial_write(const char *buff, int len) {
         consume(&state.serial_buffer);
         state.busy = 1;
     }
-    STI;
+    if (interrupts_enabled)
+        STI;
     return i+1;
 }
 

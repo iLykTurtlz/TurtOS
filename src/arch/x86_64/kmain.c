@@ -8,9 +8,13 @@
 #include "irq.h"
 #include "tss.h"
 #include "serial.h"
+#include "parse_multiboot.h"
+#include "mmu.h"
 
-void kmain(void)
+
+void kmain(struct fixed_header *multiboot2_start)
 {
+
 	CLI;
 	
 #ifdef debug
@@ -19,18 +23,27 @@ void kmain(void)
 	while(j);
 #endif
 
+	
+
 	idt_init();
 	IRQ_init(); //sets mask for each PIC interrupt
 	
 	
 	tss_init();
+	
 	serial_init();
 	// serial_keyboard_init();
-
-	// turns out keyboard_init needs to be last
 	keyboard_init(); //unmasks 1
 
-	IRQ_set_mask(0);
+	parse_multiboot(multiboot2_start);
+	// small_test_MMU();
+	// test_MMU();
+	stress_test_MMU();
+
+	// turns out keyboard_init needs to be last
+	
+
+	// IRQ_set_mask(0);
 	
 	// for (int i=0; i<15; i++) {
 	// 	if (i == 1 || i == 4) { //COM1 is IRQ4, PS2 is IRQ1

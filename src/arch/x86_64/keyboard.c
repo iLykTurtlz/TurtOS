@@ -103,7 +103,7 @@ int handshake(uint16_t port, uint8_t command, int nb_tries) {
 }
 
 void keyboard_init() {
-    /*TODO? determine whether the PS/2 controller exists???*/
+    //TODO? determine whether the PS/2 controller exists???
 
     // disable devices on channel 1 and channel 2
     write(PS2_CMD, DISABLE1);
@@ -119,14 +119,14 @@ void keyboard_init() {
 
     // set config
     struct config c = *((struct config *)&config_data);
-    c.interrupt_port1 = 1; //needs to be 1!!!
-    c.interrupt_port2 = 0;
-    c.sysflag = 1;
-    c.zero1 = 0;
-    c.clock1 = 1; //
-    c.clock2 = 0;
+    c.interrupt_port1 = 0; //needs to be 0!!!
+    // c.interrupt_port2 = 0;
+    // c.sysflag = 1;
+    // c.zero1 = 0;
+    c.clock1 = 0; //0 means enable
+    // c.clock2 = 0;
     c.translation_port1 = 0; //
-    c.zero2 = 0;
+    // c.zero2 = 0;
     config_data = *((uint8_t *)&c);
 
     //write config byte back out to the PS/2 controller
@@ -156,13 +156,13 @@ void keyboard_init() {
 
     // set scan code 1
     int code = 1;
-    if (!handshake(PS2_DATA, SET_SCAN_CODE, 2)) {
+    if (!handshake(PS2_DATA, SET_SCAN_CODE, 5)) {
         VGA_display_str("Error initiating scan code setup\n", ERROR);
     }
-    if (!handshake(PS2_DATA, SCAN_CODE(code), 2)) {
+    if (!handshake(PS2_DATA, SCAN_CODE(code), 5)) {
         VGA_display_str("Error setting scan code\n", ERROR);
     } else {
-        kprintf("Error setting scan code %d\n", code);
+        kprintf("Set scan code %d\n", code);
     }
 
     if (handshake(PS2_DATA, ENABLE_KEYBOARD, 2)) {
@@ -174,6 +174,27 @@ void keyboard_init() {
     
     IRQ_set_handler(0x21, handle_keyboard, 0);
     IRQ_clear_mask(1);
+
+    // // READ CONFIG BYTE
+    // uint8_t read_val;
+    // write(PS2_CMD, READ_CONFIG);
+    // read_val = read(PS2_DATA);
+    // kprintf("CONFIG BYTE BEFORE: %x\n", read_val);
+
+    // NEW CONFIG
+    c.interrupt_port1 = 1;
+    config_data = *((uint8_t *)&c);
+    // // config_data = 0xa8;
+    // kprintf("CONFIG DATA TO BE WRITTEN: %x\n", config_data);
+
+    // WRITE CONFIG BYTE
+    write(PS2_CMD, WRITE_CONFIG);
+    write(PS2_DATA, config_data);
+
+    // READ CONFIG
+    // write(PS2_CMD, READ_CONFIG);
+    // read_val = read(PS2_DATA);
+    // kprintf("CONFIG BYTE AFTER: %x\n", read_val);
 
 }
 

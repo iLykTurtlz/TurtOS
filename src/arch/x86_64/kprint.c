@@ -17,6 +17,7 @@
         if (x == 0)                       \
         {                                 \
             VGA_display_str("0", INFO);   \
+            serial_write("0", 1);         \
             return 1;                     \
         }                                 \
         char buf[BUFSIZ] = {0};           \
@@ -40,36 +41,36 @@
         buf[j] = '\0';                    \
         strreverse(buf);                  \
         VGA_display_str(buf, INFO);       \
-        int result = strlen(buf); \
-        serial_write(buf, result);\
-        return result;               \
+        int result = strlen(buf);         \
+        serial_write(buf, result);        \
+        return result;                    \
     }
 
 PRINT_NUM(short, short, SIGNED)
 PRINT_NUM(int, int, SIGNED)
 /*
-int print_int(int x, int base)  
-{                                     
-    if (x == 0)                       
-    {                                 
-        VGA_display_str("0", INFO);   
-        return 1;                     
-    }                                 
-    char buf[BUFSIZ] = {0};           
-    char digit = 0;                   
-    uint64_t num = 0;                 
-    num = *((uint64_t *)&x); 
-    if (1 && x < 0)            
-        num = ~num + 1;               
-    size_t j = 0;                     
-    while (num > 0)                   
-    {                                 
-        digit = num % base;           
-        if (base == HEX && digit > 9) 
-            digit = digit + 'a' - 10; 
-        else                          
-            digit += '0';             
-        buf[j++] = digit;             
+int print_int(int x, int base)
+{
+    if (x == 0)
+    {
+        VGA_display_str("0", INFO);
+        return 1;
+    }
+    char buf[BUFSIZ] = {0};
+    char digit = 0;
+    uint64_t num = 0;
+    num = *((uint64_t *)&x);
+    if (1 && x < 0)
+        num = ~num + 1;
+    size_t j = 0;
+    while (num > 0)
+    {
+        digit = num % base;
+        if (base == HEX && digit > 9)
+            digit = digit + 'a' - 10;
+        else
+            digit += '0';
+        buf[j++] = digit;
         num /= base;                  \
     }                                 \
     if (HAS_SIGN && x < 0)            \

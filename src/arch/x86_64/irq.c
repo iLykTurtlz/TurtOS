@@ -52,7 +52,7 @@ void IRQ_end_of_interrupt(uint8_t irq)
 }
 
 static inline void io_wait(void) {
-    // __asm__ volatile ("outb %%al, $0x80" : : "a"(0));
+    __asm__ volatile ("outb %%al, $0x80" : : "a"(0));
 }
 
 void PIC_remap(int offset1, int offset2)
@@ -73,11 +73,11 @@ void PIC_remap(int offset1, int offset2)
 	outb(PIC1_DATA, ICW4_8086);               // ICW4: have the PICs use 8086 mode (and not 8080 mode)
 	io_wait();
 	outb(PIC2_DATA, ICW4_8086);
-	io_wait();
+	// io_wait();
 
-	// Unmask both PICs.
-	outb(PIC1_DATA, 0);
-	outb(PIC2_DATA, 0);
+	// Mask both PICs.
+	outb(PIC1_DATA, 0xff);
+	outb(PIC2_DATA, 0xff);
 }
 
 
@@ -105,8 +105,11 @@ void IRQ_set_mask(uint8_t IRQline) {
         port = PIC2_DATA;
         IRQline -= 8;
     }
+    //sanity check
+    kprintf("BEFORE set PIC #%d: %x\n", IRQline, inb(port));
     value = inb(port) | (1 << IRQline);
-    outb(port, value);        
+    outb(port, value);     
+    kprintf("AFTER set PIC #%d: %x\n", IRQline, inb(port));   
 }
 
 
@@ -121,8 +124,10 @@ void IRQ_clear_mask(uint8_t IRQline) {
         port = PIC2_DATA;
         IRQline -= 8;
     }
+    // kprintf("BEFORE clear PIC #%d: %x\n", IRQline, inb(port));
     value = inb(port) & ~(1 << IRQline);
-    outb(port, value);        
+    outb(port, value);   
+    // kprintf("AFTER clear PIC #%d: %x\n", IRQline, inb(port));     
 }
 
 

@@ -4,6 +4,8 @@ ext2_img := build/os-$(arch).img
 debug_option := -d int
 CFLAGS := -g -Wall -ffreestanding -mno-red-zone
 
+grub_no_kernel_img := build/grub_no_kernel.img
+
 
 create_disk_image := ./create_disk_image.sh
 linker_script := src/arch/$(arch)/linker.ld
@@ -19,6 +21,9 @@ c_obj := $(patsubst src/arch/$(arch)/%.c, \
 .PHONY: all clean run ext2_img debug
 
 all: $(kernel)
+
+grub_install: $(grub_no_kernel_img)
+	
 
 clean:
 	rm -r build
