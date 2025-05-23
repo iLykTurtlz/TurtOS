@@ -2,15 +2,14 @@
 #include "stddef.h"
 #include "kprint.h"
 
-#define MMU_NULL 1
+
+#define MAX_NB_PAGING_REGIONS 10
 
 //flag to determine whether the next frame should come from memory_regions or from freelist
 static int reading_memory_regions = 1;
 
-struct page_frame {
-    struct page_frame *next;
-    char empty[PAGE_SIZE - sizeof(struct page_frame *)]; //PAGE_SIZE = 4096
-}__attribute__((packed));
+
+size_t DEBUG_NB_ALLOCS = 0;
 
 static struct page_frame *freelist = (struct page_frame *)MMU_NULL;
 
@@ -18,7 +17,7 @@ static struct page_frame *freelist = (struct page_frame *)MMU_NULL;
 void *MMU_pf_alloc(void) {
     if (reading_memory_regions) {
         struct memory_region *ptr = memory_info_page_start;
-        while ( (ptr->start != (struct memory_region *)MEMORY_REGION_NULL) && (ptr->end - ptr->next < PAGE_SIZE) ) {
+        while ( (ptr->start != (struct memory_region *)MEMORY_REGION_NULL) && (ptr->end - ptr->next < PAGE_FRAME_SIZE) ) {
             ptr++;
         }
         if (ptr->start == (struct memory_region *)MEMORY_REGION_NULL) {
@@ -27,17 +26,21 @@ void *MMU_pf_alloc(void) {
             return MMU_pf_alloc();
         }
         void *retval = ptr->next;
-        ptr->next = (void *)((uint64_t)ptr->next + PAGE_SIZE);
+        ptr->next = (void *)((uint64_t)ptr->next + PAGE_FRAME_SIZE);
+        DEBUG_NB_ALLOCS++;
+        // kprintf("Number of pf allocs: %ld\n", DEBUG_NB_ALLOCS);
         return retval;
     } 
     else if (freelist != (struct page_frame *)MMU_NULL) {
         void *retval = freelist;
         freelist = freelist->next;
+        DEBUG_NB_ALLOCS++;
+        // kprintf("Number of pf allocs: %ld\n", DEBUG_NB_ALLOCS);
         return retval;
     }
     else {
         kprintf("ERROR: all pages have been allocated!");
-        return (void *)UINTPTR_MAX;
+        return (void *)MMU_NULL;
     }
 }
 
@@ -69,6 +72,7 @@ void small_test_MMU(void) {
     kprintf("Small test complete.\n");
 }
 
+
 void test_MMU(void) {
     // I calculated 32564 pages may be allocated before the next alloc comes from the freelist
     // in total: 32565 pages available
@@ -76,17 +80,17 @@ void test_MMU(void) {
     //low memory pages + high memory pages + first page
 
     //record the start of each section containing frames, the number of pages per frame, the number of sections
-    struct page_frame *starts[10];
-    size_t nb_pages[10];
+    struct page_frame *starts[MAX_NB_PAGING_REGIONS];
+    size_t nb_pages[MAX_NB_PAGING_REGIONS];
     int nb_sections = 0;
 
     // walk through the memory regions to find this info
     struct memory_region *ptr = memory_info_page_start;
     while (ptr->start != (struct memory_region *)MEMORY_REGION_NULL) {
         size_t segment_size = (uint64_t)ptr->end - (uint64_t)ptr->next;
-        if (segment_size / PAGE_SIZE > 0) {
+        if (segment_size / PAGE_FRAME_SIZE > 0) {
             starts[nb_sections] = ptr->next; // or ptr->start
-            nb_pages[nb_sections] = segment_size / PAGE_SIZE;
+            nb_pages[nb_sections] = segment_size / PAGE_FRAME_SIZE;
             nb_sections++;
         }
         ptr++;
@@ -108,7 +112,7 @@ void test_MMU(void) {
             }
             if (j == 3)
                 kprintf("...\n");
-            if (j > nb_pages[i] - 3) {
+            if (j > nb_pages[i] - 4) {
                 kprintf("Page %ld of section starting at %p, at %p\n", j, starts[i], p);
             }
         }
@@ -137,24 +141,24 @@ void test_MMU(void) {
             MMU_pf_free(starts[i] + j);
         }
     }
+    
     kprintf("All pages free'd\n");
     kprintf("First three addresses of freelist: %p, %p, %p\n", freelist, freelist->next, freelist->next->next);
-    
 }
 
 void stress_test_MMU(void) {
     //record the start of each section containing frames, the number of pages per frame, the number of sections
-    struct page_frame *starts[10];
-    size_t nb_pages[10];
+    struct page_frame *starts[MAX_NB_PAGING_REGIONS];
+    size_t nb_pages[MAX_NB_PAGING_REGIONS];
     int nb_sections = 0;
 
     // walk through the memory regions to find this info
     struct memory_region *ptr = memory_info_page_start;
     while (ptr->start != (struct memory_region *)MEMORY_REGION_NULL) {
         size_t segment_size = (uint64_t)ptr->end - (uint64_t)ptr->next;
-        if (segment_size / PAGE_SIZE > 0) {
+        if (segment_size / PAGE_FRAME_SIZE > 0) {
             starts[nb_sections] = ptr->next; // or ptr->start
-            nb_pages[nb_sections] = segment_size / PAGE_SIZE;
+            nb_pages[nb_sections] = segment_size / PAGE_FRAME_SIZE;
             nb_sections++;
         }
         ptr++;
@@ -167,7 +171,7 @@ void stress_test_MMU(void) {
         for (size_t j=0; j<nb_pages[i]; j++) {
             p = MMU_pf_alloc();
             page_arr = (uint64_t *)p;
-            for (size_t k=0; k<PAGE_SIZE/sizeof(uint64_t); k++) {
+            for (size_t k=0; k<PAGE_FRAME_SIZE/sizeof(uint64_t); k++) {
                 page_arr[k] = (uint64_t)p;
             }
         }
@@ -176,12 +180,12 @@ void stress_test_MMU(void) {
     struct page_frame *first_page = MMU_pf_alloc();
     kprintf("This page should be @ 0....%p\n", first_page);
     page_arr = (uint64_t *)first_page;
-    for (size_t k=0; k<PAGE_SIZE/sizeof(uint64_t); k++) {
+    for (size_t k=0; k<PAGE_FRAME_SIZE/sizeof(uint64_t); k++) {
         page_arr[k] = (uint64_t)first_page;
     }
 
     //check bit patterns
-    for (size_t k=0; k<PAGE_SIZE/sizeof(uint64_t); k++) {
+    for (size_t k=0; k<PAGE_FRAME_SIZE/sizeof(uint64_t); k++) {
         if (page_arr[k] != (uint64_t)first_page) {
             kprintf("Uh oh: page_arr[%ld]==%lx but page_arr==%p\n", k, page_arr[k], page_arr);
         }
@@ -190,7 +194,7 @@ void stress_test_MMU(void) {
     for (int i=0; i<nb_sections; i++) {
         for (size_t j=0; j<nb_pages[i]; j++) {
             page_arr = (uint64_t *)(starts[i] + j); //jth page of the ith segment (large enough to contain pages)
-            for (size_t k=0; k<PAGE_SIZE/sizeof(uint64_t); k++) {
+            for (size_t k=0; k<PAGE_FRAME_SIZE/sizeof(uint64_t); k++) {
                 if (page_arr[k] != (uint64_t)page_arr) {
                     kprintf("Uh oh: page_arr[%ld]==%lx but page_arr==%p\n", k, page_arr[k], page_arr);
                 }
@@ -210,8 +214,8 @@ void stress_test_MMU(void) {
     kprintf("Stress test complete!\n");
     // struct page_frame *low_start = (struct page_frame *)0x1000;
     // struct page_frame *high_start = high_memory_start();
-    // size_t nb_low = (0x9fc00 - (uint64_t)low_start) / PAGE_SIZE;
-    // size_t nb_high = (0x7fe0000 - (uint64_t)high_start) / PAGE_SIZE;
+    // size_t nb_low = (0x9fc00 - (uint64_t)low_start) / PAGE_FRAME_SIZE;
+    // size_t nb_high = (0x7fe0000 - (uint64_t)high_start) / PAGE_FRAME_SIZE;
 
     // // kprintf("High memory start: %p\n", high_memory_start());
 
@@ -222,25 +226,25 @@ void stress_test_MMU(void) {
     // for (size_t i=0; i<nb_low; i++) {
     //     p = MMU_pf_alloc();
     //     uint64_t *page_arr = (uint64_t *)p;
-    //     for (size_t j = 0; j < PAGE_SIZE / sizeof(uint64_t); j++) {
+    //     for (size_t j = 0; j < PAGE_FRAME_SIZE / sizeof(uint64_t); j++) {
     //         page_arr[j] = (uint64_t)p;
     //     }
     // }
     // for (size_t i=0; i<nb_high; i++) {
     //     p = MMU_pf_alloc();
     //     uint64_t *page_arr = (uint64_t *)p;
-    //     for (size_t j = 0; j < PAGE_SIZE / sizeof(uint64_t); j++) {
+    //     for (size_t j = 0; j < PAGE_FRAME_SIZE / sizeof(uint64_t); j++) {
     //         page_arr[j] = (uint64_t)p;
     //     }
     // }
     // struct page_frame *first_page = MMU_pf_alloc();
     // uint64_t *page_arr = (uint64_t *)first_page;
-    // for (size_t i = 0; i < PAGE_SIZE / sizeof(uint64_t); i++) {
+    // for (size_t i = 0; i < PAGE_FRAME_SIZE / sizeof(uint64_t); i++) {
     //     page_arr[i] = (uint64_t)first_page;
     // }
 
     // // verify bit pattern for first page
-    // for (size_t i = 0; i < PAGE_SIZE / sizeof(uint64_t); i++) {
+    // for (size_t i = 0; i < PAGE_FRAME_SIZE / sizeof(uint64_t); i++) {
     //     if (page_arr[i] != (uint64_t)first_page) {
     //         kprintf("Uh oh: page_arr[%ld]==%lx but page_arr==%p\n", i, page_arr[i], page_arr);
     //     }
@@ -248,7 +252,7 @@ void stress_test_MMU(void) {
     // // verify bit pattern for low pages
     // for (size_t i=0; i<nb_low; i++) {
     //     uint64_t *page_arr = (uint64_t *)&low_start[i];
-    //     for (size_t j = 0; j < PAGE_SIZE / sizeof(uint64_t); j++) {
+    //     for (size_t j = 0; j < PAGE_FRAME_SIZE / sizeof(uint64_t); j++) {
     //         if (page_arr[j] != (uint64_t)page_arr) {
     //             kprintf("Uh oh: page_arr[%ld]==%lx but page_arr==%p\n", j, page_arr[j], page_arr);
     //         }
@@ -257,7 +261,7 @@ void stress_test_MMU(void) {
     // // verify bit pattern for high pages
     // for (size_t i=0; i<nb_high; i++) {
     //     uint64_t *page_arr = (uint64_t *)&high_start[i];
-    //     for (size_t j = 0; j < PAGE_SIZE / sizeof(uint64_t); j++) {
+    //     for (size_t j = 0; j < PAGE_FRAME_SIZE / sizeof(uint64_t); j++) {
     //         if (page_arr[j] != (uint64_t)page_arr) {
     //             kprintf("Uh oh: page_arr[%ld]==%lx but page_arr==%p\n", j, page_arr[j], page_arr);
     //         }

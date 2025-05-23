@@ -2,7 +2,7 @@ arch ?= x86_64
 kernel := build/kernel-$(arch).bin
 ext2_img := build/os-$(arch).img
 debug_option := -d int
-CFLAGS := -g -Wall -ffreestanding -mno-red-zone
+CFLAGS := -g -Wall -Werror -ffreestanding -mno-red-zone
 
 grub_no_kernel_img := build/grub_no_kernel.img
 

@@ -115,7 +115,7 @@ void find_first_free_page(struct memory_info_entry *meminfo_arr, size_t meminfo_
             //if the intersection isn't empty
             if (b_end > a_start) {
                 // first segment should be clear
-                if (b_start - a_start >= PAGE_SIZE) {
+                if (b_start - a_start >= PAGE_FRAME_SIZE) {
                     memory_info_page_start = (struct memory_region *)a_start;
                     return;
                 }
@@ -134,7 +134,7 @@ void find_first_free_page(struct memory_info_entry *meminfo_arr, size_t meminfo_
         }
 
         // if there's enough left after checking constraints
-        if (a_end - a_start >= PAGE_SIZE) {
+        if (a_end - a_start >= PAGE_FRAME_SIZE) {
             memory_info_page_start = (struct memory_region *)a_start;
             return;
         }
@@ -160,7 +160,7 @@ void write_free_info_page(struct memory_info_entry *meminfo_arr, size_t meminfo_
     // the output_page will be considered allocated until all other regions have been allocated
     // then it will be free'd
     uint64_t output_page_start = (uint64_t)memory_info_page_start;
-    uint64_t output_page_end = (uint64_t)memory_info_page_start + PAGE_SIZE;
+    uint64_t output_page_end = (uint64_t)memory_info_page_start + PAGE_FRAME_SIZE;
     
     
     size_t meminfo_idx=0, elf_idx=0;
@@ -348,7 +348,7 @@ void parse_multiboot(struct fixed_header *head) {
             }
             case 6:
             {
-                kprintf("#####Found the memory map tag!#####\n");
+                // kprintf("#####Found the memory map tag!#####\n");
                 struct memory_map *p = tag;
                 // kprintf("\tSanity check: type should be 6... %d\n", p->type);
                 // kprintf("\tSanity check: memory entry size should be 24... %d\n", p->entry_size);
@@ -363,24 +363,24 @@ void parse_multiboot(struct fixed_header *head) {
                 
                 // parse_memory_info_entries(memory_info_array, meminfo_array_len);
                 // }
-                kprintf("####################\n");
+                // kprintf("####################\n");
                 break;
             }
             case 9:
             {
                 struct elf_symbols *p = tag;
-                kprintf("#####Found the elf symbols!#####");
-                kprintf("\ttag size = %d, nb entries = %d, sizeof(entry) = %d, index of section with string table = %d",
-                    p->tag_size, p->nb_entries, p->entry_size, p->string_table_idx
-                );
+                // kprintf("#####Found the elf symbols!#####");
+                // kprintf("\ttag size = %d, nb entries = %d, sizeof(entry) = %d, index of section with string table = %d",
+                //     p->tag_size, p->nb_entries, p->entry_size, p->string_table_idx
+                // );
                 
-                size_t metadata_size = sizeof(struct elf_symbols) - sizeof(struct elf_section_header);
-                size_t array_size = (p->tag_size - metadata_size);
-                size_t array_len = array_size / p->nb_entries;
-                kprintf("\tmetadata_size = %ld, array_size = %ld, total_size = %d\n",
-                metadata_size, array_size, p->tag_size);
-                kprintf("\tarray_len = %ld, nb_entries=%d\n", array_len, p->nb_entries);
-                kprintf("######################\n");
+                // size_t metadata_size = sizeof(struct elf_symbols) - sizeof(struct elf_section_header);
+                // size_t array_size = (p->tag_size - metadata_size);
+                // size_t array_len = array_size / p->nb_entries;
+                // kprintf("\tmetadata_size = %ld, array_size = %ld, total_size = %d\n",
+                // metadata_size, array_size, p->tag_size);
+                // kprintf("\tarray_len = %ld, nb_entries=%d\n", array_len, p->nb_entries);
+                // kprintf("######################\n");
                 elf_header_array = &p->first_entry;
                 elf_array_len = p->nb_entries;
                 // parse_elf_section_headers(elf_header_array, p->nb_entries, p->string_table_idx);
@@ -388,8 +388,8 @@ void parse_multiboot(struct fixed_header *head) {
             }
             default:
             {
-                struct generic_tag *p = tag;
-                kprintf("Unknown tag of type %d, size %d\n", p->type, p->tag_size);
+                // struct generic_tag *p = tag;
+                // kprintf("Unknown tag of type %d, size %d\n", p->type, p->tag_size);
             }
         }
         tag = next_tag(tag);
@@ -398,8 +398,8 @@ void parse_multiboot(struct fixed_header *head) {
     }
     find_first_free_page(memory_info_array, meminfo_array_len, elf_header_array, elf_array_len);
     write_free_info_page(memory_info_array, meminfo_array_len, elf_header_array, elf_array_len);
-    verify_memory_regions();
-    kprintf("MEMORY INFO PAGE @%p\n", memory_info_page_start);
+    // verify_memory_regions();
+    // kprintf("MEMORY INFO PAGE @%p\n", memory_info_page_start);
 }
 
 

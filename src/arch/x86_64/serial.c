@@ -45,10 +45,11 @@
 
 #define SERIAL_BUFFER_SIZE 4096
 MAKE_CIRCULAR_QUEUE(char, SERIAL_BUFFER_SIZE)
+// the above macro provides the following interface:
 // struct char_circular_queue;
 // void char_circular_queue_init(struct char_circular_queue *q, void (*consume_next)(char));
-// static void produce(struct char_circular_queue *q, char c);
-// static void consume(struct char_circular_queue *q);
+// static int produce(struct char_circular_queue *q, char c);
+// static int consume(struct char_circular_queue *q);
 
 
 struct serial_state {
@@ -89,7 +90,7 @@ void handle_serial(uint8_t irq, uint32_t error, void *arg) {
             s->busy = 0;
     }
     //acknowledge the interrupts with the PIC
-    // IRQ_end_of_interrupt(irq);
+    // IRQ_end_of_interrupt(irq); - built into IRQ_call
 }
 
 

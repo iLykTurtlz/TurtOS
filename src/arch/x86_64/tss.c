@@ -77,7 +77,7 @@ void tss_init() {
 
 
     // ???
-    tss.rsp[0] = (uint64_t)&stack1[STACK_SIZE]; // ???
+    tss.rsp[0] = (uint64_t)&stack1[STACK_SIZE]; // ??? garbage - only need rsp for switch into ring 0 from nonzero
     tss.reserved1 = 0;
     tss.reserved2 = 0;
     tss.reserved3 = 0;

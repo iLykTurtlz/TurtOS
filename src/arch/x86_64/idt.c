@@ -12,7 +12,7 @@
 #define PF_STACK 3
 
 
-struct idt_entry {
+struct IDT_entry {
 	uint16_t isr_low;      // The lower 16 bits of the ISR's address
 	uint16_t target_selector;    // The GDT segment selector that the CPU will load into CS before calling the ISR
 	uint8_t ist : 3;          // The IST in the TSS (task state segment) that the CPU will load into RSP; set to zero for now
@@ -31,7 +31,7 @@ struct idt_entry {
 
 
 __attribute__((aligned(0x10))) 
-static struct idt_entry idt[IDT_MAX_DESCRIPTORS];
+static struct IDT_entry idt[IDT_MAX_DESCRIPTORS];
 
 
 void exception_handler() {
@@ -50,9 +50,9 @@ static idtr_t idtr;
 
 
 
-void idt_set_descriptor(uint8_t vector, void *isr, uint8_t type)
+void IDT_set_descriptor(uint8_t vector, void *isr, uint8_t type)
 {
-    struct idt_entry *descriptor = &idt[vector];
+    struct IDT_entry *descriptor = &idt[vector];
     descriptor->isr_low = (uint64_t)isr & 0xffff;
     descriptor->target_selector = GDT_OFFSET_KERNEL_CODE;
 
@@ -80,9 +80,9 @@ static int vectors[IDT_MAX_DESCRIPTORS];
 extern void *isr_stub_table[];
 
 
-void idt_init() {
+void IDT_init() {
     idtr.base = (uintptr_t)&idt[0];
-    idtr.limit = (uint16_t)sizeof(struct idt_entry) * IDT_MAX_DESCRIPTORS - 1;
+    idtr.limit = (uint16_t)sizeof(struct IDT_entry) * IDT_MAX_DESCRIPTORS - 1;
 
     // for (uint8_t vector = 0; vector < 32; vector++) {
     //     idt_set_descriptor(vector, isr_stub_table[vector], 0x8e);
@@ -91,7 +91,7 @@ void idt_init() {
 
     //test
     for (uint16_t vector=0; vector < IDT_MAX_DESCRIPTORS; vector++) {
-        idt_set_descriptor(vector, isr_stub_table[vector], 0xe); //8f is trap, 8e is interrupt
+        IDT_set_descriptor(vector, isr_stub_table[vector], 0xe); //8f is trap, 8e is interrupt
         vectors[vector] = 1;
     }
 

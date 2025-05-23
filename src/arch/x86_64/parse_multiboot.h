@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define PAGE_SIZE 4096
+#define PAGE_FRAME_SIZE 4096
 #define MEMORY_REGION_NULL UINTPTR_MAX
 
 struct fixed_header {

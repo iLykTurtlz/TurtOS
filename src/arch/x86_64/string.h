@@ -14,5 +14,8 @@ char tolower(char c);
 char isupper(char c);
 char islower(char c);
 
+void *memcpy(void * restrict dest, const void * restrict src, size_t n);
+void *memset(void *b, int c, size_t len);
+
 
 #endif

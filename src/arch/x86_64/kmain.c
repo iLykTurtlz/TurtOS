@@ -10,6 +10,7 @@
 #include "serial.h"
 #include "parse_multiboot.h"
 #include "mmu.h"
+#include "paging.h"
 
 
 void kmain(struct fixed_header *multiboot2_start)
@@ -22,10 +23,10 @@ void kmain(struct fixed_header *multiboot2_start)
 	j=1;
 	while(j);
 #endif
-
 	
-
-	idt_init();
+	parse_multiboot(multiboot2_start);
+	MMU_init();
+	IDT_init();
 	IRQ_init(); //sets mask for each PIC interrupt
 	
 	
@@ -34,11 +35,25 @@ void kmain(struct fixed_header *multiboot2_start)
 	serial_init();
 	// serial_keyboard_init();
 	keyboard_init(); //unmasks 1
+  
+	// this test only works for 4K identity map pages
+	// kprintf("Result of 1-1 mapping: 0x1234567: %lx\n", test_page_table(0x1234567));
 
-	parse_multiboot(multiboot2_start);
+	// parse_multiboot(multiboot2_start);
 	// small_test_MMU();
 	// test_MMU();
-	stress_test_MMU();
+	// int *p = MMU_alloc_page();
+	// kprintf("p = %p\n", p);
+	// kprintf("test: %lx\n", test_page_table((uint64_t)p));
+	// kprintf("*p = %d\n", *p);
+
+	// p[0] = 5;
+	// kprintf("p[0] = %d\n", p[0]);
+
+	// test_MMU();
+	// stress_test_MMU();
+	test_paging();
+	// stress_test_MMU();
 
 	// turns out keyboard_init needs to be last
 	

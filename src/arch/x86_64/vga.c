@@ -1,5 +1,5 @@
 #include "vga.h"
-#include "memory.h"
+#include "string.h"
 #include "irq.h"
 
 #define TAB_SIZE 4

@@ -20,23 +20,23 @@
         q->is_full = 0;                                        \
     }                                                          \
                                                                \
-    static int produce(struct T##_circular_queue *q, T c)     \
+    static int produce(struct T##_circular_queue *q, T c)      \
     {                                                          \
         if (q->is_full)                                        \
-            return 0;                                            \
+            return 0;                                          \
         q->buffer[q->producer] = c;                            \
         q->producer = (q->producer + 1) % SIZE;                \
         q->is_full = q->producer == q->consumer;               \
-        return 1; \
+        return 1;                                              \
     }                                                          \
                                                                \
-    static int consume(struct T##_circular_queue *q)          \
+    static int consume(struct T##_circular_queue *q)           \
     {                                                          \
         if (!q->is_full && q->consumer == q->producer)         \
-            return 0;                                            \
+            return 0;                                          \
         q->consume_next(q->buffer[q->consumer]);               \
         q->consumer = (q->consumer + 1) % SIZE;                \
         q->is_full = 0;                                        \
-        return 1; \
+        return 1;                                              \
     }
 #endif
