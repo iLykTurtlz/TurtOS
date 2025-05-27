@@ -44,19 +44,6 @@
 #define COMMAND_QUEUE_SIZE 64
 
 
-
-
-
-
-// enum State {
-//     INIT,
-//     SCAN,
-//     IGNORE,
-//     COMMAND,
-//     STOP,
-// };
-
-
 struct config {
     uint8_t interrupt_port1 : 1;
     uint8_t interrupt_port2 : 1;

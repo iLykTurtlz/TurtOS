@@ -35,6 +35,11 @@ void kmain(struct fixed_header *multiboot2_start)
 	serial_init();
 	// serial_keyboard_init();
 	keyboard_init(); //unmasks 1
+
+
+	STI;
+
+	// test_paging(); //PAGING TEST
   
 	// this test only works for 4K identity map pages
 	// kprintf("Result of 1-1 mapping: 0x1234567: %lx\n", test_page_table(0x1234567));
@@ -52,7 +57,7 @@ void kmain(struct fixed_header *multiboot2_start)
 
 	// test_MMU();
 	// stress_test_MMU();
-	test_paging();
+	
 	// stress_test_MMU();
 
 	// turns out keyboard_init needs to be last
@@ -67,7 +72,7 @@ void kmain(struct fixed_header *multiboot2_start)
 	// 		IRQ_set_mask(i);
 	// 	}
 	// }
-	STI;
+	// STI;
 
 	// char *words = "dfgjklsdfghjkladhsjfkhasdklfjklahsdkf sadfjklsadfjkl";
 	// serial_write(words, 20);

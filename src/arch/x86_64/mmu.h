@@ -4,8 +4,8 @@
 #include "parse_multiboot.h"
 #include <stddef.h>
 
-#define MMU_NULL 1
-#define KERNEL_NULL 0xf000000000000000
+#define MMU_NULL ((void *)1)
+#define KERNEL_NULL ((void *)0xf000000000000000)
 
 extern size_t DEBUG_NB_ALLOCS;
 

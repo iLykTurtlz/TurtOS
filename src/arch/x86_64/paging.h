@@ -40,7 +40,7 @@ void test_paging(void);
 
 
 // uint64_t test_page_table(struct virtual_address addr);
-uint64_t test_page_table(uint64_t vaddr);
+// uint64_t test_page_table(uint64_t vaddr);
 
 
 #endif
