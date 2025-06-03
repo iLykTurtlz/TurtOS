@@ -100,6 +100,7 @@ void PROC_init(void)
 }
 
 
+static int curr_proc_exit = 0;
 // Exits and destroys all the state of the thread that calls kexit.
 // Needs to run the scheduler to pick another process.
 // I also suggest you use a trap-based implementation AND the IST mechanism so that the trap handler
@@ -107,7 +108,10 @@ void PROC_init(void)
 // without pulling the rug out from under yourself.
 void kexit(void)
 {
-    // curr_proc->state = TERMINATED; // destroy from PROC_run?
+    // for batch only
+    curr_proc_exit = 1;
+
+
     PROC_reschedule();
     // kprintf("curr_proc = %d, next_proc = %d\n", curr_proc->pid, next_proc->pid);
     // display_procs();
@@ -150,12 +154,8 @@ struct Process *PROC_create_kthread(kproc_t entry_point, void *arg)
 // are available to run. This function does not actually perform a context switch.
 void PROC_reschedule(void)
 {
-    if (ready_proc->len == 0)
-    {
-        next_proc = curr_proc;
-    }
-    else
-    {
+    // BATCH
+    if (curr_proc_exit || curr_proc->pid == 0) {
         next_proc = peek_front(ready_proc); 
         if (!pop_front(ready_proc))
         {
@@ -163,7 +163,28 @@ void PROC_reschedule(void)
             // I probably won't have kprintf fully initialized
             __asm__ volatile("hlt");
         }
+        curr_proc_exit = 0;
+    } else {
+        next_proc = curr_proc;
     }
+
+
+
+    // ROUND ROBIN
+    // if (ready_proc->len == 0)
+    // {
+    //     next_proc = curr_proc;
+    // }
+    // else
+    // {
+    //     next_proc = peek_front(ready_proc); 
+    //     if (!pop_front(ready_proc))
+    //     {
+    //         // kprintf("PROC_reschedule: failed to pop first from ready_proc\n");
+    //         // I probably won't have kprintf fully initialized
+    //         __asm__ volatile("hlt");
+    //     }
+    // }
 }
 
 // predicate
