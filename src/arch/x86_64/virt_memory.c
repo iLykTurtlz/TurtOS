@@ -353,6 +353,10 @@ void MMU_free_page(void *ptr) {
     MMU_free_pages(ptr, 1);
 }
 
+static inline void __native_flush_tlb_single(unsigned long addr) {
+   asm volatile("invlpg (%0)" ::"r" (addr) : "memory");
+}
+
 void MMU_free_pages(void *ptr, int num) {
     union vaddr current_addr;
     current_addr.value = (uint64_t)ptr;
@@ -364,7 +368,9 @@ void MMU_free_pages(void *ptr, int num) {
         }
         leaf->P = 0;
         leaf->AVL = 0;
-        MMU_pf_free((void *)(((uint64_t)(leaf->phys_addr)) << 12));
+        uint64_t free_address = ((uint64_t)(leaf->phys_addr)) << 12;
+        MMU_pf_free((void *)free_address);
+        __native_flush_tlb_single(free_address);
         // invlpg the addr to kill the tlb entry
         current_addr.value += PAGE_FRAME_SIZE;
     }

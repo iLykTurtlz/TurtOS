@@ -3,9 +3,13 @@
 
 #include "tss.h"
 #include <stdint.h>
+#include "list.h"
+#include "phys_memory.h"
 
+//type declarations
 typedef void (*kproc_t)(void*);
 typedef enum {READY, BLOCKED, ELECTED, TERMINATED} PROC_state; // ZOMBIE?
+
 
 struct Context
 {
@@ -34,18 +38,35 @@ struct Process
     struct Stack stack;
 };
 
-extern struct Process *curr_proc;
+// forward declarations (cf. list.h)
+struct PROC_list;
 
+
+
+extern struct Process *curr_proc;
+extern struct PROC_list *ready_proc, *all_proc;
 
 
 void PROC_init(void);
-
 void PROC_run(void);
 struct Process *PROC_create_kthread(kproc_t entry_point, void *arg); //needed for snakes
 void PROC_reschedule(void);
 void yield(void);
 void kexit(void);
 void PROC_test(void);
+
+
+
+// void PROC_block_on(struct ProcessQueue *, int enable_ints);
+// void PROC_unblock_all(struct ProcessQueue *);
+// void PROC_unblock_head(struct ProcessQueue *);
+// void PROC_init_queue(struct ProcessQueue *);
+
+void PROC_block_on(struct PROC_list *, int enable_ints);
+void PROC_unblock_all(struct PROC_list *);
+void PROC_unblock_head(struct PROC_list *);
+struct PROC_list *PROC_list_new();
+
 
 
 

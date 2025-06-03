@@ -7,6 +7,8 @@
 #include "serial.h"
 #include "irq.h"
 // #include "irq.h"
+#include "context_switch.h"
+#include "circular_queue.h"
 
 #define PS2_DATA 0x60
 #define PS2_CMD 0x64
@@ -41,7 +43,19 @@
 
 
 /* driver parameters */
-#define COMMAND_QUEUE_SIZE 64
+// #define COMMAND_QUEUE_SIZE 64
+
+
+MAKE_CIRCULAR_QUEUE(char, 64)
+
+struct char_circular_queue stdin;
+static char from_kbd = 0;
+
+
+// "list.h" doubly linked circular list of struct Process *
+// MAKE_LIST(PROC, struct Process *)
+struct PROC_list *keyboard_wait;
+
 
 
 struct config {
@@ -89,7 +103,29 @@ int handshake(uint16_t port, uint8_t command, int nb_tries) {
     return response == ACK ? 1 : 0;
 }
 
+static void consume_stdin(char c) {
+    from_kbd = c;
+}
+
+
+
+void KBD_io(void *arg)
+{
+    while (1)
+        kprintf("%c", KBD_read());
+}
+
+
+
+
 void keyboard_init() {
+    char_circular_queue_init(&stdin, consume_stdin);
+    // produce(&input, 'X');
+
+
+    keyboard_wait = PROC_list_new();
+    PROC_create_kthread(KBD_io, KERNEL_NULL);
+
     //TODO? determine whether the PS/2 controller exists???
 
     // disable devices on channel 1 and channel 2
@@ -185,17 +221,17 @@ void keyboard_init() {
 
 }
 
-struct command_queue {
-    size_t first;
-    size_t last;
-    uint8_t q[COMMAND_QUEUE_SIZE];
-}; 
+// struct command_queue {
+//     size_t first;
+//     size_t last;
+//     uint8_t q[COMMAND_QUEUE_SIZE];
+// }; 
 
 
-enum Symbol {
-    ESC,
+// enum Symbol {
+//     ESC,
 
-};
+// };
 
 
 // missing 0x54-0x56, 0x59-0x80, above 0xed
@@ -382,7 +418,6 @@ struct keyboard_state {
 
 void handle_keyboard(uint8_t irq, uint32_t err, void *arg)
 {
-
     uint8_t input = read(PS2_DATA);
     if (input == LSHIFT || input == RSHIFT) {
         ks.state = SHIFTED;
@@ -416,27 +451,29 @@ void handle_keyboard(uint8_t irq, uint32_t err, void *arg)
         }
     }
     if (c != 0) {
-        kprintf("%c",c);
+        // kprintf("%c",c);
+        produce(&stdin, c);
     }
+    PROC_unblock_all(keyboard_wait);
 }
 
 
 
 
+char KBD_read() {
+    CLI;
+    while (stdin.producer == stdin.consumer) {
+        PROC_block_on(keyboard_wait, 1); //enabled ints
+        CLI;
+    }
+    consume(&stdin);
+    STI;
+    return from_kbd;
+}
 
 
 
-// void writeNOW(uint8_t irq, uint32_t err, void *arg) {
-//     consume((struct char_circular_queue *)arg);
-// }
 
-// void serial_keyboard_init() {
-//     char_circular_queue_init(&SerialState.serial_buffer, serial_write);
-//     IRQ_set_handler(0x21, handle_serial, NULL);
-//     IRQ_set_handler(0x24, writeNOW, &SerialState.serial_buffer);
-//     // need to hook up consumer
-//     //IRQ_set_handler(0x21, handle_keyboard, 0);
-// }
 
 
 

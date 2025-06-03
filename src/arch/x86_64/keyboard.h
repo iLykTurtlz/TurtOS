@@ -10,4 +10,7 @@ void poll();
 void handle_keyboard(uint8_t irq, uint32_t err, void *arg);
 // void handle_serial(uint8_t irq, uint32_t err, void *arg);
 // void serial_keyboard_init();
+
+extern struct PROC_list *keyboard_wait;
+char KBD_read();
 #endif

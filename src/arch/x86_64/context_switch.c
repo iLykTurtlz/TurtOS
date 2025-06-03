@@ -1,10 +1,9 @@
 #include "context_switch.h"
 #include <stdint.h>
-#include "list.h"
-#include "phys_memory.h"
 #include "string.h"
 #include "kprint.h"
 #include "irq.h"
+
 
 
 void test_entry(void *arg) {
@@ -25,7 +24,7 @@ MAKE_LIST(PROC, struct Process *)
 static struct Process *proc0 = KERNEL_NULL;
 struct Process *curr_proc = KERNEL_NULL;
 static struct Process *next_proc = KERNEL_NULL;
-static struct PROC_list *ready_proc, *all_proc;
+struct PROC_list *ready_proc, *all_proc;
 static int next_pid = 1;
 
 // for DEBUG
@@ -47,14 +46,10 @@ inline void yield(void)
     __asm__ volatile("int $0x80");
 }
 
-// leverage existing interrupt handler...-> call yield from it?
 
 void handle_yield(uint8_t irq, uint32_t err, void *arg)
 {
     struct Context *ctx = arg;  
-    // uint64_t cs = ctx->cs;
-    // uint64_t ss = ctx->ss;
-    // kprintf("cs = %ld, ss = %ld\n", cs, ss);
 
     if (curr_proc != next_proc) {  
         if (next_proc == KERNEL_NULL) {
@@ -63,10 +58,9 @@ void handle_yield(uint8_t irq, uint32_t err, void *arg)
         }
         //save the current process's context
         memcpy(&curr_proc->ctx, ctx, sizeof(struct Context));
-        push_back(ready_proc, curr_proc);
+        if (curr_proc->state == READY)
+            push_back(ready_proc, curr_proc);
         curr_proc = next_proc;
-        // curr_proc->ctx.cs = cs;
-        // curr_proc->ctx.ss = ss;
         memcpy(ctx, &curr_proc->ctx, sizeof(struct Context));
     }
 }
@@ -99,8 +93,11 @@ void PROC_init(void)
     // PROC_test();
 }
 
+// FOR BATCH ONLY
+// static int curr_proc_exit = 0;
 
-static int curr_proc_exit = 0;
+
+
 // Exits and destroys all the state of the thread that calls kexit.
 // Needs to run the scheduler to pick another process.
 // I also suggest you use a trap-based implementation AND the IST mechanism so that the trap handler
@@ -108,8 +105,8 @@ static int curr_proc_exit = 0;
 // without pulling the rug out from under yourself.
 void kexit(void)
 {
-    // for batch only
-    curr_proc_exit = 1;
+    // for BATCH only
+    // curr_proc_exit = 1;
 
 
     PROC_reschedule();
@@ -139,10 +136,6 @@ struct Process *PROC_create_kthread(kproc_t entry_point, void *arg)
     proc->ctx.rip = (uint64_t)entry_point;
     proc->ctx.rsp = (uint64_t)&proc->stack.exit; 
     proc->ctx.cs = 0x08;
-    // ss?
-
-    
-
 
     // add to queue(s)
     push_back(ready_proc, proc);
@@ -155,28 +148,7 @@ struct Process *PROC_create_kthread(kproc_t entry_point, void *arg)
 void PROC_reschedule(void)
 {
     // BATCH
-    if (curr_proc_exit || curr_proc->pid == 0) {
-        next_proc = peek_front(ready_proc); 
-        if (!pop_front(ready_proc))
-        {
-            // kprintf("PROC_reschedule: failed to pop first from ready_proc\n");
-            // I probably won't have kprintf fully initialized
-            __asm__ volatile("hlt");
-        }
-        curr_proc_exit = 0;
-    } else {
-        next_proc = curr_proc;
-    }
-
-
-
-    // ROUND ROBIN
-    // if (ready_proc->len == 0)
-    // {
-    //     next_proc = curr_proc;
-    // }
-    // else
-    // {
+    // if (curr_proc_exit || curr_proc->pid == 0) {
     //     next_proc = peek_front(ready_proc); 
     //     if (!pop_front(ready_proc))
     //     {
@@ -184,7 +156,28 @@ void PROC_reschedule(void)
     //         // I probably won't have kprintf fully initialized
     //         __asm__ volatile("hlt");
     //     }
+    //     curr_proc_exit = 0;
+    // } else {
+    //     next_proc = curr_proc;
     // }
+
+
+
+    // ROUND ROBIN
+    if (ready_proc->len == 0)
+    {
+        next_proc = curr_proc;
+    }
+    else
+    {
+        next_proc = peek_front(ready_proc); 
+        if (!pop_front(ready_proc))
+        {
+            // kprintf("PROC_reschedule: failed to pop first from ready_proc\n");
+            // I probably won't have kprintf fully initialized
+            __asm__ volatile("hlt");
+        }
+    }
 }
 
 // predicate
@@ -206,4 +199,42 @@ void PROC_test() {
         PROC_create_kthread(test_entry, arr+i);
     }
     kfree(arr);
+}
+
+
+
+
+
+void PROC_block_on(struct PROC_list *blocking_q, int enable_ints) {
+    if (blocking_q == KERNEL_NULL) {
+        asm volatile("hlt");
+    }
+    curr_proc->state = BLOCKED;
+    push_back(blocking_q, curr_proc); //yield will not push_back a blocked process on ready_proc
+    if (enable_ints)
+        STI;
+    yield();
+}
+
+void PROC_unblock_all(struct PROC_list *blocking_q) {
+    struct PROC_list_node *curr = blocking_q->head;
+    for (size_t i=0; i<blocking_q->len; i++) {
+        struct Process *proc = curr->val;
+        proc->state = READY;
+        push_back(ready_proc, proc);
+        curr = curr->next;
+    }
+    clear(blocking_q);
+}
+
+void PROC_unblock_head(struct PROC_list *blocking_q) {
+    if (blocking_q->len == 0)
+        return;
+    struct Process *proc = peek_front(blocking_q);
+    if (proc == KERNEL_NULL) {
+        return;
+    }
+    pop_front(blocking_q);
+    proc->state = READY;
+    push_back(ready_proc, proc);
 }

@@ -3,6 +3,7 @@
 
 #include "irq.h"
 // #include "keyboard.h"
+#include "circular_queue.h"
 
 
 
@@ -67,7 +68,7 @@ static inline uint8_t inb(uint16_t port) {
     return ret;
 }
 
-void consume_next(char c) {
+static void consume_next(char c) {
     outb(PORT, c);
     state.busy = 1;
 }
