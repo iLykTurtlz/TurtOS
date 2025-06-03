@@ -120,11 +120,10 @@ void KBD_io(void *arg)
 
 void keyboard_init() {
     char_circular_queue_init(&stdin, consume_stdin);
-    // produce(&input, 'X');
 
 
-    keyboard_wait = PROC_list_new();
-    PROC_create_kthread(KBD_io, KERNEL_NULL);
+    // keyboard_wait = PROC_list_new();
+    // PROC_create_kthread(KBD_io, KERNEL_NULL);
 
     //TODO? determine whether the PS/2 controller exists???
 
@@ -451,10 +450,10 @@ void handle_keyboard(uint8_t irq, uint32_t err, void *arg)
         }
     }
     if (c != 0) {
-        // kprintf("%c",c);
-        produce(&stdin, c);
+        kprintf("%c",c);
+        // produce(&stdin, c);
     }
-    PROC_unblock_all(keyboard_wait);
+    // PROC_unblock_all(keyboard_wait);
 }
 
 
