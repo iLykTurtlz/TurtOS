@@ -11,7 +11,9 @@ isr_0:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+xor rdx, rdx
+; C args (irq, err)
     mov rdi, 0
 
     call IRQ_call
@@ -38,7 +40,8 @@ isr_1:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 1
 
     call IRQ_call
@@ -65,7 +68,8 @@ isr_2:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 2
 
     call IRQ_call
@@ -92,7 +96,8 @@ isr_3:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 3
 
     call IRQ_call
@@ -119,7 +124,8 @@ isr_4:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 4
 
     call IRQ_call
@@ -146,7 +152,8 @@ isr_5:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 5
 
     call IRQ_call
@@ -173,7 +180,8 @@ isr_6:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 6
 
     call IRQ_call
@@ -200,7 +208,8 @@ isr_7:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 7
 
     call IRQ_call
@@ -233,7 +242,8 @@ isr_8:
     push r10
     push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 8
 
     call IRQ_call
@@ -260,7 +270,8 @@ isr_9:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 9
 
     call IRQ_call
@@ -293,7 +304,8 @@ isr_10:
     push r10
     push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 10
 
     call IRQ_call
@@ -326,7 +338,8 @@ isr_11:
     push r10
     push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 11
 
     call IRQ_call
@@ -359,7 +372,8 @@ isr_12:
     push r10
     push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 12
 
     call IRQ_call
@@ -392,7 +406,8 @@ isr_13:
     push r10
     push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 13
 
     call IRQ_call
@@ -425,7 +440,8 @@ isr_14:
     push r10
     push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 14
 
     call IRQ_call
@@ -452,7 +468,8 @@ isr_15:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 15
 
     call IRQ_call
@@ -479,7 +496,8 @@ isr_16:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 16
 
     call IRQ_call
@@ -512,7 +530,8 @@ isr_17:
     push r10
     push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 17
 
     call IRQ_call
@@ -539,7 +558,8 @@ isr_18:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 18
 
     call IRQ_call
@@ -566,7 +586,8 @@ isr_19:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 19
 
     call IRQ_call
@@ -593,7 +614,8 @@ isr_20:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 20
 
     call IRQ_call
@@ -620,7 +642,8 @@ isr_21:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 21
 
     call IRQ_call
@@ -647,7 +670,8 @@ isr_22:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 22
 
     call IRQ_call
@@ -674,7 +698,8 @@ isr_23:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 23
 
     call IRQ_call
@@ -701,7 +726,8 @@ isr_24:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 24
 
     call IRQ_call
@@ -728,7 +754,8 @@ isr_25:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 25
 
     call IRQ_call
@@ -755,7 +782,8 @@ isr_26:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 26
 
     call IRQ_call
@@ -782,7 +810,8 @@ isr_27:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 27
 
     call IRQ_call
@@ -809,7 +838,8 @@ isr_28:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 28
 
     call IRQ_call
@@ -836,7 +866,8 @@ isr_29:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 29
 
     call IRQ_call
@@ -869,7 +900,8 @@ isr_30:
     push r10
     push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 30
 
     call IRQ_call
@@ -896,7 +928,8 @@ isr_31:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 31
 
     call IRQ_call
@@ -923,7 +956,8 @@ isr_32:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 32
 
     call IRQ_call
@@ -950,7 +984,8 @@ isr_33:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 33
 
     call IRQ_call
@@ -977,7 +1012,8 @@ isr_34:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 34
 
     call IRQ_call
@@ -1004,7 +1040,8 @@ isr_35:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 35
 
     call IRQ_call
@@ -1031,7 +1068,8 @@ isr_36:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 36
 
     call IRQ_call
@@ -1058,7 +1096,8 @@ isr_37:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 37
 
     call IRQ_call
@@ -1085,7 +1124,8 @@ isr_38:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 38
 
     call IRQ_call
@@ -1112,7 +1152,8 @@ isr_39:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 39
 
     call IRQ_call
@@ -1139,7 +1180,8 @@ isr_40:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 40
 
     call IRQ_call
@@ -1166,7 +1208,8 @@ isr_41:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 41
 
     call IRQ_call
@@ -1193,7 +1236,8 @@ isr_42:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 42
 
     call IRQ_call
@@ -1220,7 +1264,8 @@ isr_43:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 43
 
     call IRQ_call
@@ -1247,7 +1292,8 @@ isr_44:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 44
 
     call IRQ_call
@@ -1274,7 +1320,8 @@ isr_45:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 45
 
     call IRQ_call
@@ -1301,7 +1348,8 @@ isr_46:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 46
 
     call IRQ_call
@@ -1328,7 +1376,8 @@ isr_47:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 47
 
     call IRQ_call
@@ -1355,7 +1404,8 @@ isr_48:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 48
 
     call IRQ_call
@@ -1382,7 +1432,8 @@ isr_49:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 49
 
     call IRQ_call
@@ -1409,7 +1460,8 @@ isr_50:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 50
 
     call IRQ_call
@@ -1436,7 +1488,8 @@ isr_51:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 51
 
     call IRQ_call
@@ -1463,7 +1516,8 @@ isr_52:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 52
 
     call IRQ_call
@@ -1490,7 +1544,8 @@ isr_53:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 53
 
     call IRQ_call
@@ -1517,7 +1572,8 @@ isr_54:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 54
 
     call IRQ_call
@@ -1544,7 +1600,8 @@ isr_55:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 55
 
     call IRQ_call
@@ -1571,7 +1628,8 @@ isr_56:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 56
 
     call IRQ_call
@@ -1598,7 +1656,8 @@ isr_57:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 57
 
     call IRQ_call
@@ -1625,7 +1684,8 @@ isr_58:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 58
 
     call IRQ_call
@@ -1652,7 +1712,8 @@ isr_59:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 59
 
     call IRQ_call
@@ -1679,7 +1740,8 @@ isr_60:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 60
 
     call IRQ_call
@@ -1706,7 +1768,8 @@ isr_61:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 61
 
     call IRQ_call
@@ -1733,7 +1796,8 @@ isr_62:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 62
 
     call IRQ_call
@@ -1760,7 +1824,8 @@ isr_63:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 63
 
     call IRQ_call
@@ -1787,7 +1852,8 @@ isr_64:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 64
 
     call IRQ_call
@@ -1814,7 +1880,8 @@ isr_65:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 65
 
     call IRQ_call
@@ -1841,7 +1908,8 @@ isr_66:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 66
 
     call IRQ_call
@@ -1868,7 +1936,8 @@ isr_67:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 67
 
     call IRQ_call
@@ -1895,7 +1964,8 @@ isr_68:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 68
 
     call IRQ_call
@@ -1922,7 +1992,8 @@ isr_69:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 69
 
     call IRQ_call
@@ -1949,7 +2020,8 @@ isr_70:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 70
 
     call IRQ_call
@@ -1976,7 +2048,8 @@ isr_71:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 71
 
     call IRQ_call
@@ -2003,7 +2076,8 @@ isr_72:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 72
 
     call IRQ_call
@@ -2030,7 +2104,8 @@ isr_73:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 73
 
     call IRQ_call
@@ -2057,7 +2132,8 @@ isr_74:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 74
 
     call IRQ_call
@@ -2084,7 +2160,8 @@ isr_75:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 75
 
     call IRQ_call
@@ -2111,7 +2188,8 @@ isr_76:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 76
 
     call IRQ_call
@@ -2138,7 +2216,8 @@ isr_77:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 77
 
     call IRQ_call
@@ -2165,7 +2244,8 @@ isr_78:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 78
 
     call IRQ_call
@@ -2192,7 +2272,8 @@ isr_79:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 79
 
     call IRQ_call
@@ -2219,7 +2300,8 @@ isr_80:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 80
 
     call IRQ_call
@@ -2246,7 +2328,8 @@ isr_81:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 81
 
     call IRQ_call
@@ -2273,7 +2356,8 @@ isr_82:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 82
 
     call IRQ_call
@@ -2300,7 +2384,8 @@ isr_83:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 83
 
     call IRQ_call
@@ -2327,7 +2412,8 @@ isr_84:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 84
 
     call IRQ_call
@@ -2354,7 +2440,8 @@ isr_85:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 85
 
     call IRQ_call
@@ -2381,7 +2468,8 @@ isr_86:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 86
 
     call IRQ_call
@@ -2408,7 +2496,8 @@ isr_87:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 87
 
     call IRQ_call
@@ -2435,7 +2524,8 @@ isr_88:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 88
 
     call IRQ_call
@@ -2462,7 +2552,8 @@ isr_89:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 89
 
     call IRQ_call
@@ -2489,7 +2580,8 @@ isr_90:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 90
 
     call IRQ_call
@@ -2516,7 +2608,8 @@ isr_91:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 91
 
     call IRQ_call
@@ -2543,7 +2636,8 @@ isr_92:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 92
 
     call IRQ_call
@@ -2570,7 +2664,8 @@ isr_93:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 93
 
     call IRQ_call
@@ -2597,7 +2692,8 @@ isr_94:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 94
 
     call IRQ_call
@@ -2624,7 +2720,8 @@ isr_95:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 95
 
     call IRQ_call
@@ -2651,7 +2748,8 @@ isr_96:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 96
 
     call IRQ_call
@@ -2678,7 +2776,8 @@ isr_97:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 97
 
     call IRQ_call
@@ -2705,7 +2804,8 @@ isr_98:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 98
 
     call IRQ_call
@@ -2732,7 +2832,8 @@ isr_99:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 99
 
     call IRQ_call
@@ -2759,7 +2860,8 @@ isr_100:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 100
 
     call IRQ_call
@@ -2786,7 +2888,8 @@ isr_101:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 101
 
     call IRQ_call
@@ -2813,7 +2916,8 @@ isr_102:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 102
 
     call IRQ_call
@@ -2840,7 +2944,8 @@ isr_103:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 103
 
     call IRQ_call
@@ -2867,7 +2972,8 @@ isr_104:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 104
 
     call IRQ_call
@@ -2894,7 +3000,8 @@ isr_105:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 105
 
     call IRQ_call
@@ -2921,7 +3028,8 @@ isr_106:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 106
 
     call IRQ_call
@@ -2948,7 +3056,8 @@ isr_107:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 107
 
     call IRQ_call
@@ -2975,7 +3084,8 @@ isr_108:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 108
 
     call IRQ_call
@@ -3002,7 +3112,8 @@ isr_109:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 109
 
     call IRQ_call
@@ -3029,7 +3140,8 @@ isr_110:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 110
 
     call IRQ_call
@@ -3056,7 +3168,8 @@ isr_111:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 111
 
     call IRQ_call
@@ -3083,7 +3196,8 @@ isr_112:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 112
 
     call IRQ_call
@@ -3110,7 +3224,8 @@ isr_113:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 113
 
     call IRQ_call
@@ -3137,7 +3252,8 @@ isr_114:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 114
 
     call IRQ_call
@@ -3164,7 +3280,8 @@ isr_115:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 115
 
     call IRQ_call
@@ -3191,7 +3308,8 @@ isr_116:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 116
 
     call IRQ_call
@@ -3218,7 +3336,8 @@ isr_117:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 117
 
     call IRQ_call
@@ -3245,7 +3364,8 @@ isr_118:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 118
 
     call IRQ_call
@@ -3272,7 +3392,8 @@ isr_119:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 119
 
     call IRQ_call
@@ -3299,7 +3420,8 @@ isr_120:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 120
 
     call IRQ_call
@@ -3326,7 +3448,8 @@ isr_121:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 121
 
     call IRQ_call
@@ -3353,7 +3476,8 @@ isr_122:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 122
 
     call IRQ_call
@@ -3380,7 +3504,8 @@ isr_123:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 123
 
     call IRQ_call
@@ -3407,7 +3532,8 @@ isr_124:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 124
 
     call IRQ_call
@@ -3434,7 +3560,8 @@ isr_125:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 125
 
     call IRQ_call
@@ -3461,7 +3588,8 @@ isr_126:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 126
 
     call IRQ_call
@@ -3488,7 +3616,8 @@ isr_127:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 127
 
     call IRQ_call
@@ -3504,58 +3633,142 @@ isr_127:
 	pop rsi
     iretq
 
+; for yield
 isr_128:
-    push rsi
 	push rax
+	push rbx
 	push rcx
 	push rdx
 	push rdi
+	push rsi
 	push r8
 	push r9
 	push r10
 	push r11
+	push r12
+	push r13
+	push r14
+	push r15
+	push rbp
 
-    ; C args (irq, err)
+	;this doesn't work
+	;push ds
+	;push es
+	;push fs
+	;push gs
+
+	;solution
+	xor rax, rax
+	mov rax, ds
+	push rax
+	mov rax, es
+	push rax
+	mov rax, fs
+	push rax
+	mov rax, gs
+	push rax
+    
+
+    ; C args (irq, err, arg)
     mov rdi, 128
+	mov rdx, rsp
 
     call IRQ_call
 
+	pop rax
+	mov gs, ax
+	pop rax
+	mov fs, ax
+	pop rax
+	mov es, ax
+	pop rax
+	mov ds, ax
+
+
+	pop rbp
+	pop r15
+	pop r14
+	pop r13
+	pop r12
     pop r11
 	pop r10
 	pop r9
 	pop r8
+	pop rsi
 	pop rdi
 	pop rdx
 	pop rcx
+	pop rbx
 	pop rax
-	pop rsi
     iretq
 
+; for kexit
 isr_129:
-    push rsi
 	push rax
+	push rbx
 	push rcx
 	push rdx
 	push rdi
+	push rsi
 	push r8
 	push r9
 	push r10
 	push r11
+	push r12
+	push r13
+	push r14
+	push r15
+	push rbp
 
-    ; C args (irq, err)
+	;this doesn't work
+	;push ds
+	;push es
+	;push fs
+	;push gs
+
+	;solution
+	xor rax, rax
+	mov rax, ds
+	push rax
+	mov rax, es
+	push rax
+	mov rax, fs
+	push rax
+	mov rax, gs
+	push rax
+    
+
+    ; C args (irq, err, arg)
     mov rdi, 129
+	mov rdx, rsp
 
     call IRQ_call
 
+	pop rax
+	mov gs, ax
+	pop rax
+	mov fs, ax
+	pop rax
+	mov es, ax
+	pop rax
+	mov ds, ax
+
+
+	pop rbp
+	pop r15
+	pop r14
+	pop r13
+	pop r12
     pop r11
 	pop r10
 	pop r9
 	pop r8
+	pop rsi
 	pop rdi
 	pop rdx
 	pop rcx
+	pop rbx
 	pop rax
-	pop rsi
     iretq
 
 isr_130:
@@ -3569,7 +3782,8 @@ isr_130:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 130
 
     call IRQ_call
@@ -3596,7 +3810,8 @@ isr_131:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 131
 
     call IRQ_call
@@ -3623,7 +3838,8 @@ isr_132:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 132
 
     call IRQ_call
@@ -3650,7 +3866,8 @@ isr_133:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 133
 
     call IRQ_call
@@ -3677,7 +3894,8 @@ isr_134:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 134
 
     call IRQ_call
@@ -3704,7 +3922,8 @@ isr_135:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 135
 
     call IRQ_call
@@ -3731,7 +3950,8 @@ isr_136:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 136
 
     call IRQ_call
@@ -3758,7 +3978,8 @@ isr_137:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 137
 
     call IRQ_call
@@ -3785,7 +4006,8 @@ isr_138:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 138
 
     call IRQ_call
@@ -3812,7 +4034,8 @@ isr_139:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 139
 
     call IRQ_call
@@ -3839,7 +4062,8 @@ isr_140:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 140
 
     call IRQ_call
@@ -3866,7 +4090,8 @@ isr_141:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 141
 
     call IRQ_call
@@ -3893,7 +4118,8 @@ isr_142:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 142
 
     call IRQ_call
@@ -3920,7 +4146,8 @@ isr_143:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 143
 
     call IRQ_call
@@ -3947,7 +4174,8 @@ isr_144:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 144
 
     call IRQ_call
@@ -3974,7 +4202,8 @@ isr_145:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 145
 
     call IRQ_call
@@ -4001,7 +4230,8 @@ isr_146:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 146
 
     call IRQ_call
@@ -4028,7 +4258,8 @@ isr_147:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 147
 
     call IRQ_call
@@ -4055,7 +4286,8 @@ isr_148:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 148
 
     call IRQ_call
@@ -4082,7 +4314,8 @@ isr_149:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 149
 
     call IRQ_call
@@ -4109,7 +4342,8 @@ isr_150:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 150
 
     call IRQ_call
@@ -4136,7 +4370,8 @@ isr_151:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 151
 
     call IRQ_call
@@ -4163,7 +4398,8 @@ isr_152:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 152
 
     call IRQ_call
@@ -4190,7 +4426,8 @@ isr_153:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 153
 
     call IRQ_call
@@ -4217,7 +4454,8 @@ isr_154:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 154
 
     call IRQ_call
@@ -4244,7 +4482,8 @@ isr_155:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 155
 
     call IRQ_call
@@ -4271,7 +4510,8 @@ isr_156:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 156
 
     call IRQ_call
@@ -4298,7 +4538,8 @@ isr_157:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 157
 
     call IRQ_call
@@ -4325,7 +4566,8 @@ isr_158:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 158
 
     call IRQ_call
@@ -4352,7 +4594,8 @@ isr_159:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 159
 
     call IRQ_call
@@ -4379,7 +4622,8 @@ isr_160:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 160
 
     call IRQ_call
@@ -4406,7 +4650,8 @@ isr_161:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 161
 
     call IRQ_call
@@ -4433,7 +4678,8 @@ isr_162:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 162
 
     call IRQ_call
@@ -4460,7 +4706,8 @@ isr_163:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 163
 
     call IRQ_call
@@ -4487,7 +4734,8 @@ isr_164:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 164
 
     call IRQ_call
@@ -4514,7 +4762,8 @@ isr_165:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 165
 
     call IRQ_call
@@ -4541,7 +4790,8 @@ isr_166:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 166
 
     call IRQ_call
@@ -4568,7 +4818,8 @@ isr_167:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 167
 
     call IRQ_call
@@ -4595,7 +4846,8 @@ isr_168:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 168
 
     call IRQ_call
@@ -4622,7 +4874,8 @@ isr_169:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 169
 
     call IRQ_call
@@ -4649,7 +4902,8 @@ isr_170:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 170
 
     call IRQ_call
@@ -4676,7 +4930,8 @@ isr_171:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 171
 
     call IRQ_call
@@ -4703,7 +4958,8 @@ isr_172:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 172
 
     call IRQ_call
@@ -4730,7 +4986,8 @@ isr_173:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 173
 
     call IRQ_call
@@ -4757,7 +5014,8 @@ isr_174:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 174
 
     call IRQ_call
@@ -4784,7 +5042,8 @@ isr_175:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 175
 
     call IRQ_call
@@ -4811,7 +5070,8 @@ isr_176:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 176
 
     call IRQ_call
@@ -4838,7 +5098,8 @@ isr_177:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 177
 
     call IRQ_call
@@ -4865,7 +5126,8 @@ isr_178:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 178
 
     call IRQ_call
@@ -4892,7 +5154,8 @@ isr_179:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 179
 
     call IRQ_call
@@ -4919,7 +5182,8 @@ isr_180:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 180
 
     call IRQ_call
@@ -4946,7 +5210,8 @@ isr_181:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 181
 
     call IRQ_call
@@ -4973,7 +5238,8 @@ isr_182:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 182
 
     call IRQ_call
@@ -5000,7 +5266,8 @@ isr_183:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 183
 
     call IRQ_call
@@ -5027,7 +5294,8 @@ isr_184:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 184
 
     call IRQ_call
@@ -5054,7 +5322,8 @@ isr_185:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 185
 
     call IRQ_call
@@ -5081,7 +5350,8 @@ isr_186:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 186
 
     call IRQ_call
@@ -5108,7 +5378,8 @@ isr_187:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 187
 
     call IRQ_call
@@ -5135,7 +5406,8 @@ isr_188:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 188
 
     call IRQ_call
@@ -5162,7 +5434,8 @@ isr_189:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 189
 
     call IRQ_call
@@ -5189,7 +5462,8 @@ isr_190:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 190
 
     call IRQ_call
@@ -5216,7 +5490,8 @@ isr_191:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 191
 
     call IRQ_call
@@ -5243,7 +5518,8 @@ isr_192:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 192
 
     call IRQ_call
@@ -5270,7 +5546,8 @@ isr_193:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 193
 
     call IRQ_call
@@ -5297,7 +5574,8 @@ isr_194:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 194
 
     call IRQ_call
@@ -5324,7 +5602,8 @@ isr_195:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 195
 
     call IRQ_call
@@ -5351,7 +5630,8 @@ isr_196:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 196
 
     call IRQ_call
@@ -5378,7 +5658,8 @@ isr_197:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 197
 
     call IRQ_call
@@ -5405,7 +5686,8 @@ isr_198:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 198
 
     call IRQ_call
@@ -5432,7 +5714,8 @@ isr_199:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 199
 
     call IRQ_call
@@ -5459,7 +5742,8 @@ isr_200:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 200
 
     call IRQ_call
@@ -5486,7 +5770,8 @@ isr_201:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 201
 
     call IRQ_call
@@ -5513,7 +5798,8 @@ isr_202:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 202
 
     call IRQ_call
@@ -5540,7 +5826,8 @@ isr_203:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 203
 
     call IRQ_call
@@ -5567,7 +5854,8 @@ isr_204:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 204
 
     call IRQ_call
@@ -5594,7 +5882,8 @@ isr_205:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 205
 
     call IRQ_call
@@ -5621,7 +5910,8 @@ isr_206:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 206
 
     call IRQ_call
@@ -5648,7 +5938,8 @@ isr_207:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 207
 
     call IRQ_call
@@ -5675,7 +5966,8 @@ isr_208:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 208
 
     call IRQ_call
@@ -5702,7 +5994,8 @@ isr_209:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 209
 
     call IRQ_call
@@ -5729,7 +6022,8 @@ isr_210:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 210
 
     call IRQ_call
@@ -5756,7 +6050,8 @@ isr_211:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 211
 
     call IRQ_call
@@ -5783,7 +6078,8 @@ isr_212:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 212
 
     call IRQ_call
@@ -5810,7 +6106,8 @@ isr_213:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 213
 
     call IRQ_call
@@ -5837,7 +6134,8 @@ isr_214:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 214
 
     call IRQ_call
@@ -5864,7 +6162,8 @@ isr_215:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 215
 
     call IRQ_call
@@ -5891,7 +6190,8 @@ isr_216:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 216
 
     call IRQ_call
@@ -5918,7 +6218,8 @@ isr_217:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 217
 
     call IRQ_call
@@ -5945,7 +6246,8 @@ isr_218:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 218
 
     call IRQ_call
@@ -5972,7 +6274,8 @@ isr_219:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 219
 
     call IRQ_call
@@ -5999,7 +6302,8 @@ isr_220:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 220
 
     call IRQ_call
@@ -6026,7 +6330,8 @@ isr_221:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 221
 
     call IRQ_call
@@ -6053,7 +6358,8 @@ isr_222:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 222
 
     call IRQ_call
@@ -6080,7 +6386,8 @@ isr_223:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 223
 
     call IRQ_call
@@ -6107,7 +6414,8 @@ isr_224:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 224
 
     call IRQ_call
@@ -6134,7 +6442,8 @@ isr_225:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 225
 
     call IRQ_call
@@ -6161,7 +6470,8 @@ isr_226:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 226
 
     call IRQ_call
@@ -6188,7 +6498,8 @@ isr_227:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 227
 
     call IRQ_call
@@ -6215,7 +6526,8 @@ isr_228:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 228
 
     call IRQ_call
@@ -6242,7 +6554,8 @@ isr_229:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 229
 
     call IRQ_call
@@ -6269,7 +6582,8 @@ isr_230:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 230
 
     call IRQ_call
@@ -6296,7 +6610,8 @@ isr_231:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 231
 
     call IRQ_call
@@ -6323,7 +6638,8 @@ isr_232:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 232
 
     call IRQ_call
@@ -6350,7 +6666,8 @@ isr_233:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 233
 
     call IRQ_call
@@ -6377,7 +6694,8 @@ isr_234:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 234
 
     call IRQ_call
@@ -6404,7 +6722,8 @@ isr_235:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 235
 
     call IRQ_call
@@ -6431,7 +6750,8 @@ isr_236:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 236
 
     call IRQ_call
@@ -6458,7 +6778,8 @@ isr_237:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 237
 
     call IRQ_call
@@ -6485,7 +6806,8 @@ isr_238:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 238
 
     call IRQ_call
@@ -6512,7 +6834,8 @@ isr_239:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 239
 
     call IRQ_call
@@ -6539,7 +6862,8 @@ isr_240:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 240
 
     call IRQ_call
@@ -6566,7 +6890,8 @@ isr_241:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 241
 
     call IRQ_call
@@ -6593,7 +6918,8 @@ isr_242:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 242
 
     call IRQ_call
@@ -6620,7 +6946,8 @@ isr_243:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 243
 
     call IRQ_call
@@ -6647,7 +6974,8 @@ isr_244:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 244
 
     call IRQ_call
@@ -6674,7 +7002,8 @@ isr_245:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 245
 
     call IRQ_call
@@ -6701,7 +7030,8 @@ isr_246:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 246
 
     call IRQ_call
@@ -6728,7 +7058,8 @@ isr_247:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 247
 
     call IRQ_call
@@ -6755,7 +7086,8 @@ isr_248:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 248
 
     call IRQ_call
@@ -6782,7 +7114,8 @@ isr_249:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 249
 
     call IRQ_call
@@ -6809,7 +7142,8 @@ isr_250:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 250
 
     call IRQ_call
@@ -6836,7 +7170,8 @@ isr_251:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 251
 
     call IRQ_call
@@ -6863,7 +7198,8 @@ isr_252:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 252
 
     call IRQ_call
@@ -6890,7 +7226,8 @@ isr_253:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 253
 
     call IRQ_call
@@ -6917,7 +7254,8 @@ isr_254:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 254
 
     call IRQ_call
@@ -6944,7 +7282,8 @@ isr_255:
 	push r10
 	push r11
 
-    ; C args (irq, err)
+    xor rdx, rdx
+; C args (irq, err)
     mov rdi, 255
 
     call IRQ_call

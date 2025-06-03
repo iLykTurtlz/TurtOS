@@ -1,15 +1,18 @@
 #include "idt.h"
 #include <stdint.h>
 
+
 #define GDT_OFFSET_KERNEL_CODE 8 // ???????, 0x08????
 
 #define DOUBLE_FAULT 8
 #define GENERAL_PROTECTION_FAULT 13
 #define PAGE_FAULT 14
+#define KEXIT 0x81
 
 #define DF_STACK 1
 #define GPF_STACK 2
 #define PF_STACK 3
+#define KEXIT_STACK 4
 
 
 struct IDT_entry {
@@ -62,6 +65,8 @@ void IDT_set_descriptor(uint8_t vector, void *isr, uint8_t type)
         descriptor->ist = DF_STACK;
     else if (vector == GENERAL_PROTECTION_FAULT)
         descriptor->ist = GPF_STACK;
+    else if (vector == KEXIT)
+        descriptor->ist = KEXIT_STACK;
     else
         descriptor->ist = 0;
 
@@ -91,7 +96,10 @@ void IDT_init() {
 
     //test
     for (uint16_t vector=0; vector < IDT_MAX_DESCRIPTORS; vector++) {
-        IDT_set_descriptor(vector, isr_stub_table[vector], 0xe); //8f is trap, 8e is interrupt
+        if (vector != KEXIT)
+            IDT_set_descriptor(vector, isr_stub_table[vector], 0xe); //8f is trap, 8e is interrupt
+        else
+            IDT_set_descriptor(vector, isr_stub_table[vector], 0xf); 
         vectors[vector] = 1;
     }
 

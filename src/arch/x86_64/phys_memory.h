@@ -1,5 +1,5 @@
-#ifndef MMU_H
-#define MMU_H
+#ifndef PHYS_MEMORY_H
+#define PHYS_MEMORY_H
 
 #include "parse_multiboot.h"
 #include <stddef.h>
@@ -20,5 +20,8 @@ void MMU_pf_free(void *pf);
 void small_test_MMU(void);
 void test_MMU(void);
 void stress_test_MMU(void);
+
+// DEBUG/TEST - what were the last blocks free'd?
+void freelist_peek(int n);
 
 #endif

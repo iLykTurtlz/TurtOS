@@ -2,6 +2,9 @@
 #include "string.h"
 #include "irq.h"
 
+
+
+
 #define TAB_SIZE 4
 
 #define VGA_BASE 0xb8000
@@ -21,6 +24,13 @@ static const unsigned short empty = ((FG(VGA_BLACK) | BG(VGA_BLACK)) << 8) | '\0
 static const unsigned short blinking_cursor = ((BLINK | color) << 8) | ' ';
 static unsigned short underneath = empty;
 
+// snake stuff
+int VGA_row_count(void) {return height;}
+int VGA_col_count(void) {return width;}
+void VGA_display_attr_char(int x, int y, char c, int fg, int bg) {
+    vgaBuff[y*width + x] = ((FG(fg) | BG(bg)) << 8) | c;
+}
+// end snake stuff
 
 enum Direction {
     UP = 0,

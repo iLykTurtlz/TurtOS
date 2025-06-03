@@ -3,7 +3,7 @@
 #include <stddef.h>
 
 #define TSS_OFFSET_KERNEL_CODE 16
-#define STACK_SIZE 65536
+
 
 typedef struct {
     uint16_t segment_limit0;
@@ -41,6 +41,7 @@ tss_descriptor_t *tss_descriptor = (tss_descriptor_t *)(gdt64 + 2); //
 static char stack1[STACK_SIZE];
 static char stack2[STACK_SIZE];
 static char stack3[STACK_SIZE];
+static char stack4[STACK_SIZE];
 
 void tss_init() {
     // fill out tss descriptor
@@ -74,6 +75,7 @@ void tss_init() {
     tss.ist[0] = (uint64_t)&stack1[STACK_SIZE];
     tss.ist[1] = (uint64_t)&stack2[STACK_SIZE];
     tss.ist[2] = (uint64_t)&stack3[STACK_SIZE];
+    tss.ist[3] = (uint64_t)&stack4[STACK_SIZE];
 
 
     // ???

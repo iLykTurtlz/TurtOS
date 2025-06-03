@@ -256,7 +256,7 @@ void write_free_info_page(struct memory_info_entry *meminfo_arr, size_t meminfo_
     }
 
     //write 'null' terminator to the array
-    output->start = (void *)MEMORY_REGION_NULL; // = 0xffffffffffffffff;
+    output->start = MEMORY_REGION_NULL; // = 0xffffffffffffffff;
 }
 
 // for handling the various sizes of multiboot2 tags: rounds up to the next 8-byte-aligned address

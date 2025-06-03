@@ -1,5 +1,5 @@
-#ifndef PAGING_H
-#define PAGING_H
+#ifndef VIRT_MEMORY_H
+#define VIRT_MEMORY_H
 
 #include <stdint.h>
 
@@ -26,6 +26,9 @@ union vaddr {
     uint64_t value;
     struct virtual_address addr;
 };
+
+// useful for debug
+void *vaddr_to_addr(union vaddr address);
 
 void test_paging(void);
 

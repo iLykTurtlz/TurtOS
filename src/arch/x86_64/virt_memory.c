@@ -1,5 +1,5 @@
-#include "paging.h"
-#include "mmu.h"
+#include "virt_memory.h"
+#include "phys_memory.h"
 #include "string.h"
 #include "kprint.h"
 #include "irq.h"
@@ -177,113 +177,33 @@ struct L1_entry *descend_pagetable(union vaddr address, int allocate, int rw, in
 }
 
 
-
 void *vaddr_to_addr(union vaddr address) {
-    // // struct virtual_address addr = *((struct virtual_address *)&vaddr);
-    // union vaddr address;
-    // address.value = vaddr;
-    // // struct L4_entry *root;
-    // // __asm__ volatile ("mov %%cr3, %0" : "=r"(root));
-    // struct L4_entry *root = next_alloc.root;
-    // uint64_t l3_addr = (root[address.addr.L4_offset].L3_addr << 12);
-    // struct L3_entry *pdp = (struct L3_entry *)l3_addr;
-    // uint64_t l2_addr = (pdp[address.addr.L3_offset].L2_addr << 12);
-    // struct L2_entry *pd = (struct L2_entry *)l2_addr;
-    // uint64_t l1_addr = (pd[address.addr.L2_offset].L1_addr << 12);
-    // struct L1_entry *pt = (struct L1_entry *)l1_addr;
-    // uint64_t pf_addr = pt[address.addr.L1_offset].phys_addr << 12;
-    // uint64_t res = pf_addr + address.addr.phys_offset;
-    // return res;
     struct L1_entry *leaf = descend_pagetable(address, NO_ALLOC_PT_NODES, READ_WRITE, SUPERUSER);
     return (void *)(((uint64_t)leaf->phys_addr << 12));
 }
-
-
-
-// uint16_t level_offset(union vaddr current, int level) {
-//     uint16_t offset = 0;
-//     switch (level) {
-//         case 0:
-//             offset = current.addr.phys_offset;
-//             break;
-//         case 1:
-//             offset = current.addr.L1_offset;
-//             break;
-//         case 2:
-//             offset = current.addr.L2_offset;
-//             break;
-//         case 3:
-//             offset = current.addr.L3_offset;
-//             break;
-//         case 4:
-//             offset = current.addr.L4_offset;
-//             break;
-//         default:
-//             kprintf("ERROR: walk level = %d\n", level);
-//             __asm__ volatile("hlt");
-//     }
-//     return offset;
-// }
-
-
-// struct L1_entry *walk(void *vaddr, struct generic_entry *entry, int level, int allocate, int rw, int us) {
-//     // int top_level = level;
-//     union vaddr current;
-//     current.value = (uint64_t)vaddr;
-//     struct generic_entry *path[5];
-//     path[level] = entry;
-//     while (level > 1) {
-//         uint16_t offset = 
-//         if (path[level][offset].P == 0) {
-//             if (allocate) {
-//                 struct generic_entry *new_node = MMU_pf_alloc();
-//                 if (new_node == (void *)MMU_NULL) {
-//                     //nothing left to allocate
-//                     kprintf("NO MEMORY LEFT!\n");
-//                     return KERNEL_NULL;
-//                 }
-//                 memset(new_node, '\0', sizeof(struct generic_entry));
-//                 path[level][offset].addr = (uint64_t)new_node >> 12;
-//                 path[level][offset].RW = rw;
-//                 path[level][offset].US = us;
-//                 path[level][offset].P = 1;
-//             } else {
-//                 // no way down
-//                 return KERNEL_NULL; //NULL
-//             }
-//         }
-//         path[level-1] = (struct generic_entry *)((uint64_t)(path[level][offset].addr << 12));
-//         level--;
-//     }
-//     return (struct L1_entry *)&path[1][current.addr.L1_offset];
-// }
 
 
 void handle_page_fault(uint8_t irq, uint32_t error, void *arg) {
     union vaddr address;
     
     asm volatile ("mov %%cr2, %0" : "=r"(address.value));
-    int stop = 0;
     if (error & 1) {
         kprintf("Page protection violation caused by ");
-        stop = 1;
-    } 
-    // else {
-    //     kprintf("Non present page caused by ");
-    // }
-    // if (error & 2) {
-    //     kprintf("a write at %lx in ", vaddr);
-    // } else {
-    //     kprintf("a read at %lx in ", vaddr);
-    // }
-    // if (error & 4) {
-    //     kprintf("mode U\n");
-    // } else {
-    //     kprintf("mode S\n");
-    // }
-    if (stop) {
+        
+        if (error & 2) {
+            kprintf("a write at %lx in ", address.value);
+        } else {
+            kprintf("a read at %lx in ", address.value);
+        }
+        if (error & 4) {
+            kprintf("mode U\n");
+        } else {
+            kprintf("mode S\n");
+        }
         __asm__ volatile("hlt");
-    }
+    } 
+   // else the page is simply not present - that's probably normal
+
     struct L1_entry *leaf = descend_pagetable(address, 1, 1, 0);//walk((void *)vaddr, (struct generic_entry *)next_alloc.root, 4, 0, 1, 0);
     if (leaf == (struct L1_entry *)KERNEL_NULL) {
         kprintf("No page allocated at %p\n", (void *)address.value);
@@ -299,22 +219,17 @@ void handle_page_fault(uint8_t irq, uint32_t error, void *arg) {
         leaf->RW = 1;
         leaf->P = 1;
         leaf->AVL = 0;
-        // asm volatile("invlpg (%0)" :: "r" (vaddr) : "memory");
-        // uint64_t cr3;
-        // asm volatile("mov %%cr3, %0" : "=r"(cr3));
-        // asm volatile("mov %0, %%cr3" :: "r"(cr3));
-
     }
     else if (leaf->P == 1) {
-        kprintf("Present bit: should never happen\n");
+        kprintf("Page fault on a page marked present: should never happen\n"); //TODO permissions checks
         __asm__ volatile("hlt");
     }
     else if (leaf->AVL != 1) {
-        kprintf("AVL == %d\n", leaf->AVL);
+        kprintf("Page fault handler: AVL == %d\n", leaf->AVL);
         __asm__ volatile("hlt");
     }
     else {
-        kprintf("Something else went wrong\n");
+        kprintf("Page fault handler: something else went wrong\n");
         __asm__ volatile("hlt");
     }
 }
@@ -361,49 +276,6 @@ void MMU_init(void) {
         }
     }
 
-    // 4K page version
-    // for (size_t L2_idx=0; L2_idx<NODE_CAPACITY; L2_idx++) {
-    //     // for (size_t i=0; i<100000000; i++);
-    //     // kprintf("sizeof(struct page_frame): %ld\n", sizeof(struct page_frame));
-    //     // for (size_t i=0; i<100000000; i++);
-    //     if (pf_addr < PHYS_ADDR_MAX) {
-    //         struct L2_entry *pd = MMU_pf_alloc();
-    //         memset(pd, '\0', sizeof(struct page_frame));
-    //         one_to_one[L2_idx].US = 0;
-    //         one_to_one[L2_idx].P = 1;
-    //         one_to_one[L2_idx].RW = 1;
-    //         one_to_one[L2_idx].L2_addr = (uint64_t)pd >> 12;
-    //         for (size_t L1_idx=0; L1_idx<NODE_CAPACITY; L1_idx++) {
-    //             if (pf_addr < PHYS_ADDR_MAX) {
-    //                 struct L1_entry *pt = MMU_pf_alloc();
-    //                 memset(pt, '\0', sizeof(struct page_frame));
-    //                 pd[L1_idx].US = 0;
-    //                 pd[L1_idx].P = 1;
-    //                 pd[L1_idx].RW = 1;
-    //                 pd[L1_idx].L1_addr = (uint64_t)pt >> 12;
-    //                 for (size_t phys_idx=0; phys_idx<NODE_CAPACITY; phys_idx++) {
-    //                     if (pf_addr < PHYS_ADDR_MAX) {
-    //                         pt[phys_idx].US = 0;
-    //                         pt[phys_idx].P = 1;
-    //                         pt[phys_idx].RW = 1;
-    //                         pt[phys_idx].phys_addr =  pf_addr >> 12;
-    //                         pf_addr += sizeof(struct page_frame); // 4096
-    //                     } else {
-    //                         // NOT present
-    //                         pt[phys_idx].P = 0;
-    //                     }
-    //                 }
-    //             } else {
-    //                 // NOT present
-    //                 pd[L1_idx].P = 0;
-    //             }
-    //         }
-    //     } else {
-    //         // NOT present
-    //         one_to_one[L2_idx].P = 0;
-    //     }
-    // }
-
     // other entries
     root[KERNEL_HEAP_L4_IDX].US = 0;
     root[KERNEL_HEAP_L4_IDX].P = 0; //not present
@@ -436,12 +308,6 @@ void MMU_init(void) {
         root[i].L3_addr = 0;
     }
 
-    // set cr3
-    // struct cr3_val root_addr;
-    // memset(&root_addr, '\0', sizeof(struct cr3_val));
-    // root_addr.L4_addr = (uint64_t)root >> 12;
-    // root_addr.PWT = 0; // both need to be 0??
-    // root_addr.PCD = 0;
     __asm__ volatile ("mov %0, %%cr3"::"r"(root):"memory");
 
     IRQ_set_handler(14, handle_page_fault, NULL);
@@ -489,9 +355,9 @@ void MMU_free_page(void *ptr) {
 
 void MMU_free_pages(void *ptr, int num) {
     union vaddr current_addr;
-    // current_addr.value = (uint64_t)ptr;
+    current_addr.value = (uint64_t)ptr;
     for (int i=0; i<num; i++) {
-        struct L1_entry *leaf = descend_pagetable(current_addr, 0, 1, 0);//walk((void *)current_addr.value, (struct generic_entry *)next_alloc.root, 4, 0, 0, 0);
+        struct L1_entry *leaf = descend_pagetable(current_addr, NO_ALLOC_PT_NODES, READ_WRITE, SUPERUSER);
         if (leaf == KERNEL_NULL || leaf->P == 0) {
             kprintf("Tried to deallocate a non-allocated frame at %lx\n", (uint64_t)(((uint64_t)leaf->phys_addr) << 12));
             __asm__ volatile ("hlt");
@@ -499,12 +365,13 @@ void MMU_free_pages(void *ptr, int num) {
         leaf->P = 0;
         leaf->AVL = 0;
         MMU_pf_free((void *)(((uint64_t)(leaf->phys_addr)) << 12));
-        // current_addr.value += PAGE_FRAME_SIZE;
+        // invlpg the addr to kill the tlb entry
+        current_addr.value += PAGE_FRAME_SIZE;
     }
 }
 
 
-#define NB_TEST_ALLOCS 40000
+#define NB_TEST_ALLOCS 2000
 static void *pointers[NB_TEST_ALLOCS];
 void test_paging(void) {
     size_t i=0;
@@ -522,7 +389,10 @@ void test_paging(void) {
     i++;
     for (; i<NB_TEST_ALLOCS ; i++) {
         pointers[i] = MMU_alloc_page();
-        kprintf("DEBUG_NB_ALLOCS = %ld\n", DEBUG_NB_ALLOCS);
+        if (pointers[i] == KERNEL_NULL) {
+            break;
+        }
+        // kprintf("DEBUG_NB_ALLOCS = %ld\n", DEBUG_NB_ALLOCS);
 
         n = pointers[i];
         *n = (uint64_t)pointers[i];
@@ -533,6 +403,8 @@ void test_paging(void) {
             kprintf("UH OH! *n should be %p, instead *n=%ld\n", pointers[i], *n);
         }
     }
+    // address.value = (uint64_t)pointers[i-1];
+    // kprintf("Last page: vaddr = %p, addr = %p\n", pointers[i-1], vaddr_to_addr(address));
     kprintf("All pages allocated\n");
     for (size_t j=0; j<i; j++) {
         MMU_free_page(pointers[j]);

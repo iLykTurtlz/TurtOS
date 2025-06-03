@@ -1,4 +1,6 @@
 #include "irq.h"
+#include "idt.h"
+#include "phys_memory.h"
 #include <stdint.h>
 
 
@@ -167,12 +169,16 @@ void IRQ_set_handler(uint8_t irq, irq_callback cb, void *arg)
     irq_h[irq].arg = arg;
 }
 
-void IRQ_call(uint8_t irq, uint32_t error)
+void IRQ_call(uint8_t irq, uint32_t error, void *arg)
 {
     if (irq > IDT_MAX_DESCRIPTORS - 1) 
         return;
     if (irq_h[irq].cb != NULL) {
-        irq_h[irq].cb(irq, error, irq_h[irq].arg);
+        if (arg != 0) { //if a memory address has been passed in from the assembly stub
+            irq_h[irq].cb(irq, error, arg);
+        } else {
+            irq_h[irq].cb(irq, error, irq_h[irq].arg);
+        }
     } else {
         kprintf("Unhandled IRQ: %d\n", irq);
     }

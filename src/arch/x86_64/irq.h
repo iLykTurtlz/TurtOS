@@ -23,7 +23,7 @@ typedef void (*irq_callback)(uint8_t, uint32_t, void*);
 
 
 void IRQ_set_handler(uint8_t irq, irq_callback cb, void *arg);
-void IRQ_call(uint8_t irq, uint32_t error);
+void IRQ_call(uint8_t irq, uint32_t error, void *arg);
 
 
 

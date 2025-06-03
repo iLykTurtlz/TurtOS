@@ -1,4 +1,4 @@
-#include "mmu.h"
+#include "phys_memory.h"
 #include "stddef.h"
 #include "kprint.h"
 
@@ -11,7 +11,7 @@ static int reading_memory_regions = 1;
 
 size_t DEBUG_NB_ALLOCS = 0;
 
-static struct page_frame *freelist = (struct page_frame *)MMU_NULL;
+static struct page_frame *freelist = MMU_NULL;
 
 
 void *MMU_pf_alloc(void) {
@@ -31,7 +31,7 @@ void *MMU_pf_alloc(void) {
         // kprintf("Number of pf allocs: %ld\n", DEBUG_NB_ALLOCS);
         return retval;
     } 
-    else if (freelist != (struct page_frame *)MMU_NULL) {
+    else if (freelist != MMU_NULL) {
         void *retval = freelist;
         freelist = freelist->next;
         DEBUG_NB_ALLOCS++;
@@ -212,70 +212,17 @@ void stress_test_MMU(void) {
     MMU_pf_free(first_page);
     // kprintf("First three addresses of freelist: %p, %p, %p\n", freelist, freelist->next, freelist->next->next);
     kprintf("Stress test complete!\n");
-    // struct page_frame *low_start = (struct page_frame *)0x1000;
-    // struct page_frame *high_start = high_memory_start();
-    // size_t nb_low = (0x9fc00 - (uint64_t)low_start) / PAGE_FRAME_SIZE;
-    // size_t nb_high = (0x7fe0000 - (uint64_t)high_start) / PAGE_FRAME_SIZE;
+}
 
-    // // kprintf("High memory start: %p\n", high_memory_start());
-
-    // kprintf("Nb low memory pages: %ld\n", nb_low);
-    // kprintf("Nb high memory pages: %ld\n", nb_high);
-
-    // void *p;
-    // for (size_t i=0; i<nb_low; i++) {
-    //     p = MMU_pf_alloc();
-    //     uint64_t *page_arr = (uint64_t *)p;
-    //     for (size_t j = 0; j < PAGE_FRAME_SIZE / sizeof(uint64_t); j++) {
-    //         page_arr[j] = (uint64_t)p;
-    //     }
-    // }
-    // for (size_t i=0; i<nb_high; i++) {
-    //     p = MMU_pf_alloc();
-    //     uint64_t *page_arr = (uint64_t *)p;
-    //     for (size_t j = 0; j < PAGE_FRAME_SIZE / sizeof(uint64_t); j++) {
-    //         page_arr[j] = (uint64_t)p;
-    //     }
-    // }
-    // struct page_frame *first_page = MMU_pf_alloc();
-    // uint64_t *page_arr = (uint64_t *)first_page;
-    // for (size_t i = 0; i < PAGE_FRAME_SIZE / sizeof(uint64_t); i++) {
-    //     page_arr[i] = (uint64_t)first_page;
-    // }
-
-    // // verify bit pattern for first page
-    // for (size_t i = 0; i < PAGE_FRAME_SIZE / sizeof(uint64_t); i++) {
-    //     if (page_arr[i] != (uint64_t)first_page) {
-    //         kprintf("Uh oh: page_arr[%ld]==%lx but page_arr==%p\n", i, page_arr[i], page_arr);
-    //     }
-    // }
-    // // verify bit pattern for low pages
-    // for (size_t i=0; i<nb_low; i++) {
-    //     uint64_t *page_arr = (uint64_t *)&low_start[i];
-    //     for (size_t j = 0; j < PAGE_FRAME_SIZE / sizeof(uint64_t); j++) {
-    //         if (page_arr[j] != (uint64_t)page_arr) {
-    //             kprintf("Uh oh: page_arr[%ld]==%lx but page_arr==%p\n", j, page_arr[j], page_arr);
-    //         }
-    //     }
-    // }
-    // // verify bit pattern for high pages
-    // for (size_t i=0; i<nb_high; i++) {
-    //     uint64_t *page_arr = (uint64_t *)&high_start[i];
-    //     for (size_t j = 0; j < PAGE_FRAME_SIZE / sizeof(uint64_t); j++) {
-    //         if (page_arr[j] != (uint64_t)page_arr) {
-    //             kprintf("Uh oh: page_arr[%ld]==%lx but page_arr==%p\n", j, page_arr[j], page_arr);
-    //         }
-    //     }
-    // }
-    // // free first
-    // MMU_pf_free(first_page);
-    // // free low
-    // for (size_t i=0; i<nb_low; i++) {
-    //     MMU_pf_free(&low_start[i]);
-    // }
-    // // free high
-    // for (size_t i=0; i<nb_high; i++) {
-    //     MMU_pf_free(&high_start[i]);
-    // }
-    // kprintf("Stress test complete!\n");
+void freelist_peek(int n) {
+    struct page_frame *curr = freelist;
+    for (int i=0; i<n; i++) {
+        if (curr == MMU_NULL) {
+            kprintf("End of freelist\n");
+            break;
+        } else {
+            kprintf("%p\n", curr);
+            curr = curr->next;
+        }
+    }
 }

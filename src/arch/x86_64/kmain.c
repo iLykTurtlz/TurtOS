@@ -9,8 +9,12 @@
 #include "tss.h"
 #include "serial.h"
 #include "parse_multiboot.h"
-#include "mmu.h"
-#include "paging.h"
+#include "virt_memory.h"
+#include "phys_memory.h"
+#include "kmalloc.h"
+#include "context_switch.h"
+#include "snakes.h"
+
 
 
 void kmain(struct fixed_header *multiboot2_start)
@@ -26,20 +30,37 @@ void kmain(struct fixed_header *multiboot2_start)
 	
 	parse_multiboot(multiboot2_start);
 	MMU_init();
+
+	
 	IDT_init();
 	IRQ_init(); //sets mask for each PIC interrupt
 	
 	
 	tss_init();
+
+	// kmalloc requires page fault handling, i.e. a tss
+	kmalloc_init();
 	
 	serial_init();
 	// serial_keyboard_init();
 	keyboard_init(); //unmasks 1
 
+	PROC_init();
+	
+	// int nums[5] = {0,1,2,3,4};
+	// PROC_create_kthread(test_entry, &nums[0]);
+	// PROC_create_kthread(test_entry, &nums[1]);
+	// PROC_create_kthread(test_entry, &nums[2]);
+	// PROC_create_kthread(test_entry, &nums[3]);
+	// PROC_create_kthread(test_entry, &nums[4]);
 
 	STI;
 
 	// test_paging(); //PAGING TEST
+	// test_kmalloc();
+
+
+
   
 	// this test only works for 4K identity map pages
 	// kprintf("Result of 1-1 mapping: 0x1234567: %lx\n", test_page_table(0x1234567));
@@ -175,8 +196,16 @@ void kmain(struct fixed_header *multiboot2_start)
 	}
 	*/
 
+	// int i=1;
 	while (1)
 	{
-		__asm__ volatile("hlt");
+		setup_snakes(1);
+		PROC_run();
+		// if (i) {
+		// 	kprintf("FINISHED FIRST RUN\n");
+		// 	PROC_test();
+		// 	i=0;
+		// }
+		// __asm__ volatile("hlt");
 	}
 }

@@ -3,7 +3,11 @@
 
 #include <stddef.h>
 
-extern void kfree(void *addr);
-extern void *kmalloc(size_t size);
+void kfree(void *addr);
+void *kmalloc(size_t size);
+
+void kmalloc_init(void);
+
+void test_kmalloc(void);
 
 #endif

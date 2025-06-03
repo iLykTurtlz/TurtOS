@@ -26,12 +26,22 @@
 #define VGA_YELLOW 14
 #define VGA_BRIGHT_WHITE 15
 
+
+
 void VGA_clear(void);
 void VGA_display_char(char, unsigned char);
 void VGA_display_str(const char*, int);
 void VGA_backspace(void);
 // void VGA_move_cursor_left(void);
 // void VGA_move_cursor_right(void);
+
+
+// for snakes
+int VGA_row_count(void);
+int VGA_col_count(void);
+// void VGA_clear(void) already have it
+void VGA_display_attr_char(int x, int y, char c, int fg, int bg);
+
 
 
 #endif

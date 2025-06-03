@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 #define PAGE_FRAME_SIZE 4096
-#define MEMORY_REGION_NULL UINTPTR_MAX
+#define MEMORY_REGION_NULL ((void *)UINTPTR_MAX)
 
 struct fixed_header {
 	uint32_t tag_size;
