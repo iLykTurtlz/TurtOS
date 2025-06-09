@@ -1,5 +1,6 @@
 #include "string.h"
 #include <stddef.h>
+#include "kmalloc.h"
 
 size_t strlen(const char *s)
 {
@@ -96,5 +97,13 @@ void *memset(void *b, int c, size_t len) {
 		*d++ = v;
 	}
 	return b;
+}
+
+char *strdup(const char *s) {
+	size_t len = strlen(s);
+	char *res = kmalloc(len + 1);
+	strcpy(res, s);
+	res[len] = '\0';
+	return res;
 }
 

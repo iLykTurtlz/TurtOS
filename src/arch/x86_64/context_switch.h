@@ -44,7 +44,7 @@ struct PROC_list;
 
 
 extern struct Process *curr_proc;
-extern struct PROC_list *ready_proc, *all_proc;
+extern struct PROC_list *ready_proc, *all_proc, *keyboard_wait, *ata_read_wait;
 
 
 void PROC_init(void);

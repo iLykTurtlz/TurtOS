@@ -104,7 +104,7 @@ struct L2_entry {
 
 // L2 needs a slightly different page for the 2M huge page identity map
 struct L2_huge_entry {
-    uint64_t P : 1;
+    uint64_t P : 1; 
     uint64_t RW : 1;
     uint64_t US : 1;
     uint64_t PWT : 1;
@@ -113,10 +113,10 @@ struct L2_huge_entry {
     uint64_t D : 1;
     uint64_t one : 1;
     uint64_t G : 1;
-    uint64_t AVL : 3;
-    uint64_t PAT : 1;
-    uint64_t MBZ : 8;
-    uint64_t phys_addr : 31;
+    uint64_t AVL : 3; // bit 9
+    uint64_t PAT : 1;  // bit 12
+    uint64_t MBZ : 8; //bit 13
+    uint64_t phys_addr : 31; //bit 21
     uint64_t available : 11;
     uint64_t NX : 1;
 }__attribute__((packed));
@@ -219,6 +219,7 @@ void handle_page_fault(uint8_t irq, uint32_t error, void *arg) {
         leaf->RW = 1;
         leaf->P = 1;
         leaf->AVL = 0;
+        // asm volatile("invlpg (%0)" ::"r" (address.value) : "memory");
     }
     else if (leaf->P == 1) {
         kprintf("Page fault on a page marked present: should never happen\n"); //TODO permissions checks
@@ -237,10 +238,10 @@ void handle_page_fault(uint8_t irq, uint32_t error, void *arg) {
 
 void MMU_init(void) {
     struct L4_entry *root = MMU_pf_alloc();
-    memset(root, '\0', sizeof(struct page_frame));
+    memset(root, '\0', PAGE_FRAME_SIZE);
 
     struct L3_entry *one_to_one = MMU_pf_alloc();
-    memset(one_to_one, '\0', sizeof(struct page_frame));
+    memset(one_to_one, '\0', PAGE_FRAME_SIZE);
     
     root[ONE_TO_ONE_MAPPING_L4_IDX].US = 0; //superuser
     root[ONE_TO_ONE_MAPPING_L4_IDX].P = 1; //present
@@ -252,7 +253,7 @@ void MMU_init(void) {
     for (size_t L3_idx=0; L3_idx<NODE_CAPACITY; L3_idx++) {
         if (pf_addr < PHYS_ADDR_MAX) { //TODO get from memory_regions
             struct L2_huge_entry *pd = MMU_pf_alloc();
-            memset(pd, '\0', sizeof(struct page_frame));
+            memset(pd, '\0', PAGE_FRAME_SIZE);
             one_to_one[L3_idx].US = 0;
             one_to_one[L3_idx].P = 1;
             one_to_one[L3_idx].RW = 1;
@@ -265,6 +266,9 @@ void MMU_init(void) {
                     pd[L2_idx].P = 1;
                     pd[L2_idx].RW = 1;
                     //NOT a typo.  21 bits in the 2M L2 entry below the base address
+                    if (!(pf_addr & 0x1FFFFF) == 0) {
+                        asm volatile ("hlt");
+                    }
                     pd[L2_idx].phys_addr = pf_addr >> 21; 
                     pf_addr += 0x200000; // 2M
                 } else {

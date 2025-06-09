@@ -6,16 +6,6 @@
 
 
 
-void test_entry(void *arg) {
-	int *num = arg;
-	for (int i=0; i<5; i++) {
-		kprintf("Hello from thread num %d\n", *num);
-        yield();
-	}
-}
-
-
-
 
 // "list.h" doubly linked circular list of struct Process *
 MAKE_LIST(PROC, struct Process *)
@@ -24,8 +14,10 @@ MAKE_LIST(PROC, struct Process *)
 static struct Process *proc0 = KERNEL_NULL;
 struct Process *curr_proc = KERNEL_NULL;
 static struct Process *next_proc = KERNEL_NULL;
-struct PROC_list *ready_proc, *all_proc;
+struct PROC_list *ready_proc, *all_proc, *keyboard_wait, *ata_read_wait;
 static int next_pid = 1;
+
+
 
 // for DEBUG
 void display_procs() {
@@ -42,13 +34,13 @@ void display_procs() {
 
 inline void yield(void)
 {
-    PROC_reschedule();
     __asm__ volatile("int $0x80");
 }
 
 
 void handle_yield(uint8_t irq, uint32_t err, void *arg)
 {
+    PROC_reschedule();
     struct Context *ctx = arg;  
 
     if (curr_proc != next_proc) {  
@@ -66,6 +58,7 @@ void handle_yield(uint8_t irq, uint32_t err, void *arg)
 }
 
 void handle_kexit(uint8_t irq, uint32_t err, void *arg) {
+    PROC_reschedule();
     struct Context *ctx = arg; // useful if I wanna save zombies later
     kfree(curr_proc);
     curr_proc = next_proc;
@@ -77,6 +70,8 @@ void PROC_init(void)
 {
     ready_proc = PROC_list_new();
     all_proc = PROC_list_new();
+    keyboard_wait = PROC_list_new();
+    ata_read_wait = PROC_list_new();
 
     // original proc
     proc0 = kmalloc(sizeof(struct Process));
@@ -109,7 +104,6 @@ void kexit(void)
     // curr_proc_exit = 1;
 
 
-    PROC_reschedule();
     // kprintf("curr_proc = %d, next_proc = %d\n", curr_proc->pid, next_proc->pid);
     // display_procs();
     __asm__ volatile("int $0x81");    
@@ -191,15 +185,6 @@ void PROC_run(void) {
         yield();
 }
 
-
-void PROC_test() {
-    int *arr = kmalloc(5 * sizeof(int));
-    for (int i=0; i<5; i++) {
-        arr[i] = i;
-        PROC_create_kthread(test_entry, arr+i);
-    }
-    kfree(arr);
-}
 
 
 

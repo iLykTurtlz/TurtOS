@@ -54,7 +54,7 @@ static char from_kbd = 0;
 
 // "list.h" doubly linked circular list of struct Process *
 // MAKE_LIST(PROC, struct Process *)
-struct PROC_list *keyboard_wait;
+// struct PROC_list *keyboard_wait;
 
 
 
@@ -108,6 +108,17 @@ static void consume_stdin(char c) {
 }
 
 
+char KBD_read() {
+    CLI;
+    while (stdin.producer == stdin.consumer) {
+        PROC_block_on(keyboard_wait, 1); //enable_ints = 1
+        CLI;
+    }
+    consume(&stdin);
+    STI;
+    return from_kbd;
+}
+
 
 void KBD_io(void *arg)
 {
@@ -120,10 +131,7 @@ void KBD_io(void *arg)
 
 void keyboard_init() {
     char_circular_queue_init(&stdin, consume_stdin);
-
-
-    // keyboard_wait = PROC_list_new();
-    // PROC_create_kthread(KBD_io, KERNEL_NULL);
+    PROC_create_kthread(KBD_io, KERNEL_NULL);
 
     //TODO? determine whether the PS/2 controller exists???
 
@@ -450,25 +458,16 @@ void handle_keyboard(uint8_t irq, uint32_t err, void *arg)
         }
     }
     if (c != 0) {
-        kprintf("%c",c);
-        // produce(&stdin, c);
+        // kprintf("%c",c);
+        produce(&stdin, c);
     }
-    // PROC_unblock_all(keyboard_wait);
+    PROC_unblock_all(keyboard_wait);
 }
 
 
 
 
-char KBD_read() {
-    CLI;
-    while (stdin.producer == stdin.consumer) {
-        PROC_block_on(keyboard_wait, 1); //enabled ints
-        CLI;
-    }
-    consume(&stdin);
-    STI;
-    return from_kbd;
-}
+
 
 
 

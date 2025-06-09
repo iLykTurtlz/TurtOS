@@ -13,6 +13,7 @@ char toupper(char c);
 char tolower(char c);
 char isupper(char c);
 char islower(char c);
+char *strdup(const char *s);
 
 void *memcpy(void * restrict dest, const void * restrict src, size_t n);
 void *memset(void *b, int c, size_t len);

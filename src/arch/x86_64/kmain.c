@@ -14,6 +14,7 @@
 #include "kmalloc.h"
 #include "context_switch.h"
 #include "snakes.h"
+#include "ata.h"
 
 
 
@@ -28,7 +29,7 @@ void kmain(struct fixed_header *multiboot2_start)
 	while(j);
 #endif
 	
-	parse_multiboot(multiboot2_start);
+	parse_multiboot(multiboot2_start, 1, 0);
 	MMU_init();
 
 	
@@ -42,10 +43,12 @@ void kmain(struct fixed_header *multiboot2_start)
 	kmalloc_init();
 	
 	serial_init();
-	// serial_keyboard_init();
-	keyboard_init(); //unmasks 1
-
 	PROC_init();
+	keyboard_init(); //unmasks 1
+	// parse_multiboot(multiboot2_start, 0, 1);
+	init_ata();
+
+
 	
 	// int nums[5] = {0,1,2,3,4};
 	// PROC_create_kthread(test_entry, &nums[0]);
@@ -199,13 +202,13 @@ void kmain(struct fixed_header *multiboot2_start)
 	// int i=1;
 	while (1)
 	{
-		setup_snakes(1);
+		// setup_snakes(1);
 		PROC_run();
 		// if (i) {
 		// 	kprintf("FINISHED FIRST RUN\n");
 		// 	PROC_test();
 		// 	i=0;
 		// }
-		// __asm__ volatile("hlt");
+		__asm__ volatile("hlt");
 	}
 }

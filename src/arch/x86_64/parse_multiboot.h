@@ -19,6 +19,6 @@ struct memory_region {
 
 extern struct memory_region *memory_info_page_start;
 
-void parse_multiboot(struct fixed_header *head);
+void parse_multiboot(struct fixed_header *head, int write, int display_elf);
 
 #endif

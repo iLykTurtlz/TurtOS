@@ -307,7 +307,7 @@ void parse_elf_section_headers(struct elf_section_header *arr, size_t len, size_
     }
 }
 
-void parse_multiboot(struct fixed_header *head) {
+void parse_multiboot(struct fixed_header *head, int write, int display_elf) {
     struct memory_info_entry *memory_info_array;
     struct elf_section_header *elf_header_array;
     size_t meminfo_array_len, elf_array_len;
@@ -383,7 +383,8 @@ void parse_multiboot(struct fixed_header *head) {
                 // kprintf("######################\n");
                 elf_header_array = &p->first_entry;
                 elf_array_len = p->nb_entries;
-                // parse_elf_section_headers(elf_header_array, p->nb_entries, p->string_table_idx);
+                if (display_elf)
+                    parse_elf_section_headers(elf_header_array, p->nb_entries, p->string_table_idx);
                 break;
             }
             default:
@@ -396,8 +397,12 @@ void parse_multiboot(struct fixed_header *head) {
         super = tag;
         type = super->type;
     }
-    find_first_free_page(memory_info_array, meminfo_array_len, elf_header_array, elf_array_len);
-    write_free_info_page(memory_info_array, meminfo_array_len, elf_header_array, elf_array_len);
+    
+
+    if (write) {
+        find_first_free_page(memory_info_array, meminfo_array_len, elf_header_array, elf_array_len);
+        write_free_info_page(memory_info_array, meminfo_array_len, elf_header_array, elf_array_len);
+    }
     // verify_memory_regions();
     // kprintf("MEMORY INFO PAGE @%p\n", memory_info_page_start);
 }
