@@ -40,9 +40,11 @@ ext2_img: $(ext2_img)
 $(ext2_img): $(kernel) $(grub_cfg)
 	mkdir -p .img
 	mkdir -p build/ext2/boot/grub
+	# mkdir -p build/ext2/new
+	# touch build/ext2/new/new_file
 	cp $(kernel) build/ext2/boot/kernel.bin
 	cp $(grub_cfg) build/ext2/boot/grub
-	$(create_disk_image) $(ext2_img) build/ext2/*
+	$(create_disk_image) $(ext2_img) build/ext2/
 
 $(kernel): $(assembly_obj) $(c_obj) $(linker_script)
 	~/opt/cross/bin/x86_64-elf-ld -g -n -T $(linker_script) -o $(kernel) $(assembly_obj) $(c_obj)

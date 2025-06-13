@@ -15,6 +15,45 @@
 #include "context_switch.h"
 #include "snakes.h"
 #include "ata.h"
+#include "block_device.h"
+#include "filesystem.h"
+#include "ext2.h"
+
+
+#include <stdint.h>
+#include <stddef.h>
+
+
+
+
+
+void init(void *arg) {
+	
+	BLK_init();
+	IRQ_clear_mask(14);
+	ATA_init();
+	
+	
+
+	// tests
+	// test_ATA_read(0);
+	// kprintf("\n");
+	// test_ATA_read(1);
+	// kprintf("\n");
+	// test_ATA_read(2);
+	// kprintf("\n");
+	// test_ATA_read(32);
+	// kprintf("\n");
+	// MBR_parse((struct BlockDev *)ATA_instance);
+	
+	struct Ext2Filesystem *fs = Ext2Filesystem_new();
+	test_file_read(fs);
+
+	// test_readdir((struct VFS_SuperBlock *)fs->sb);
+	
+
+	
+}
 
 
 
@@ -30,37 +69,35 @@ void kmain(struct fixed_header *multiboot2_start)
 #endif
 	
 	parse_multiboot(multiboot2_start, 1, 0);
+
+	
 	MMU_init();
 
 	
 	IDT_init();
+	
 	IRQ_init(); //sets mask for each PIC interrupt
 	
 	
 	tss_init();
-
+	
 	// kmalloc requires page fault handling, i.e. a tss
 	kmalloc_init();
 	
 	serial_init();
 	PROC_init();
-	keyboard_init(); //unmasks 1
-	// parse_multiboot(multiboot2_start, 0, 1);
-	init_ata();
 
-
-	
-	// int nums[5] = {0,1,2,3,4};
-	// PROC_create_kthread(test_entry, &nums[0]);
-	// PROC_create_kthread(test_entry, &nums[1]);
-	// PROC_create_kthread(test_entry, &nums[2]);
-	// PROC_create_kthread(test_entry, &nums[3]);
-	// PROC_create_kthread(test_entry, &nums[4]);
 
 	STI;
 
-	// test_paging(); //PAGING TEST
-	// test_kmalloc();
+	// creates a thread
+	keyboard_init(); //unmasks 1
+	
+	// IRQ_clear_mask(14);
+	PROC_create_kthread(&init, KERNEL_NULL);
+	
+	
+
 
 
 
@@ -68,7 +105,7 @@ void kmain(struct fixed_header *multiboot2_start)
 	// this test only works for 4K identity map pages
 	// kprintf("Result of 1-1 mapping: 0x1234567: %lx\n", test_page_table(0x1234567));
 
-	// parse_multiboot(multiboot2_start);
+	// parse_multiboot(multiboot2_start,1,1);
 	// small_test_MMU();
 	// test_MMU();
 	// int *p = MMU_alloc_page();
@@ -147,37 +184,37 @@ void kmain(struct fixed_header *multiboot2_start)
 	// 	for (long long i = 0; i < 1999999; i++)
 	// 		;
 	// }
-/*
-	int count = 0;
-	kprintf("%c\n", 'a');				  // should be "a"
-	kprintf("%c\n", 'Q');				  // should be "Q"
-	kprintf("%c\n", 256 + '9');			  // Should be "9"
-	kprintf("%s\n", "test string");		  // "test string"
-	kprintf("foo%sbar\n", "blah");		  // "fooblahbar"
-	kprintf("foo%%sbar\n");				  // "foo%bar" SHOULDN'T IT BE foo%sbar??
-	kprintf("BEFORE\n");
-	kprintf("%d\n", INT_MIN);			  // "-2147483648"
-	kprintf("AFTER\n");
-	kprintf("%d\n", INT_MAX);			  // "2147483647"
-	kprintf("%u\n", 0);					  // "0"
-	kprintf("%u\n", UINT_MAX);			  // "4294967295"
-	kprintf("%x\n", 0xDEADbeef);		  // "deadbeef"
-	kprintf("%p\n", (void *)UINTPTR_MAX); // "0xFFFFFFFFFFFFFFFF"
-	kprintf("%hd\n", 0x8000);			  // "-32768"
-	kprintf("%hd\n", 0x7FFF);			  // "32767"
-	kprintf("%hu\n", 0xFFFF);			  // "65535"
-	count = kprintf("%ld\n", LONG_MIN);	  // "-9223372036854775808"
-	kprintf("count = %d\n", count);
-	kprintf("%ld\n", LONG_MAX);						 // "9223372036854775807"
-	kprintf("%lu\n", ULONG_MAX);					 // "18446744073709551615"
-	kprintf("%qd\n", (long long)LONG_MIN);			 // "-9223372036854775808"
-	kprintf("%qd\n", (long long)LONG_MAX);			 // "9223372036854775807"
-	kprintf("%qu\n", (unsigned long long)ULONG_MAX); // "18446744073709551615"
 
-	count = kprintf("%qu, %hd, %s stuffstuffstuff %x\n", (unsigned long long)ULONG_MAX, 0x7FFF, "blah", 0xca11ab1e);
-	kprintf("count = %d\n", count);
+	// int count = 0;
+	// kprintf("%c\n", 'a');				  // should be "a"
+	// kprintf("%c\n", 'Q');				  // should be "Q"
+	// kprintf("%c\n", 256 + '9');			  // Should be "9"
+	// kprintf("%s\n", "test string");		  // "test string"
+	// kprintf("foo%sbar\n", "blah");		  // "fooblahbar"
+	// kprintf("foo%%sbar\n");				  // "foo%bar" SHOULDN'T IT BE foo%sbar??
+	// kprintf("BEFORE\n");
+	// kprintf("%d\n", INT_MIN);			  // "-2147483648"
+	// kprintf("AFTER\n");
+	// kprintf("%d\n", INT_MAX);			  // "2147483647"
+	// kprintf("%u\n", 0);					  // "0"
+	// kprintf("%u\n", UINT_MAX);			  // "4294967295"
+	// kprintf("%x\n", 0xDEADbeef);		  // "deadbeef"
+	// kprintf("%p\n", (void *)UINTPTR_MAX); // "0xFFFFFFFFFFFFFFFF"
+	// kprintf("%hd\n", 0x8000);			  // "-32768"
+	// kprintf("%hd\n", 0x7FFF);			  // "32767"
+	// kprintf("%hu\n", 0xFFFF);			  // "65535"
+	// count = kprintf("%ld\n", LONG_MIN);	  // "-9223372036854775808"
+	// kprintf("count = %d\n", count);
+	// kprintf("%ld\n", LONG_MAX);						 // "9223372036854775807"
+	// kprintf("%lu\n", ULONG_MAX);					 // "18446744073709551615"
+	// kprintf("%qd\n", (long long)LONG_MIN);			 // "-9223372036854775808"
+	// kprintf("%qd\n", (long long)LONG_MAX);			 // "9223372036854775807"
+	// kprintf("%qu\n", (unsigned long long)ULONG_MAX); // "18446744073709551615"
+
+	// count = kprintf("%qu, %hd, %s stuffstuffstuff %x\n", (unsigned long long)ULONG_MAX, 0x7FFF, "blah", 0xca11ab1e);
+	// kprintf("count = %d\n", count);
 	
-	*/
+	
 
 	// kprintf("%f", 3.14); //WEIRD: it all starts over when this runs!
 
@@ -199,6 +236,7 @@ void kmain(struct fixed_header *multiboot2_start)
 	}
 	*/
 
+
 	// int i=1;
 	while (1)
 	{
@@ -211,4 +249,6 @@ void kmain(struct fixed_header *multiboot2_start)
 		// }
 		__asm__ volatile("hlt");
 	}
+	
+
 }

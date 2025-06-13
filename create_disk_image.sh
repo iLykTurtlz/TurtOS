@@ -19,7 +19,8 @@ sudo mkfs.ext2 /dev/loop"$N1"
 mkdir -p /mnt/osfiles
 sudo mount /dev/loop"$N1" /mnt/osfiles
 sudo /home/paul/opt/cross/sbin/grub-install --root-directory=/mnt/osfiles --target=i386-pc --no-floppy --modules="normal part_msdos ext2 multiboot2" /dev/loop"$N0"
-sudo cp -r $2 /mnt/osfiles
+#sudo cp -r $2 /mnt/osfiles
+sudo cp -r $2/. /mnt/osfiles
 sudo umount /mnt/osfiles
 sudo losetup -d /dev/loop"$N0"
 sudo losetup -d /dev/loop"$N1"

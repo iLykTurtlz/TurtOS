@@ -14,7 +14,7 @@ MAKE_LIST(PROC, struct Process *)
 static struct Process *proc0 = KERNEL_NULL;
 struct Process *curr_proc = KERNEL_NULL;
 static struct Process *next_proc = KERNEL_NULL;
-struct PROC_list *ready_proc, *all_proc, *keyboard_wait, *ata_read_wait;
+struct PROC_list *ready_proc, *all_proc, *keyboard_wait, *blk_dev_wait;
 static int next_pid = 1;
 
 
@@ -59,6 +59,11 @@ void handle_yield(uint8_t irq, uint32_t err, void *arg)
 
 void handle_kexit(uint8_t irq, uint32_t err, void *arg) {
     PROC_reschedule();
+    // if (curr_proc == next_proc) {
+    //     if (curr_proc->pid == 0) {
+    //         asm volatile ("hlt");
+    //     }
+    // }
     struct Context *ctx = arg; // useful if I wanna save zombies later
     kfree(curr_proc);
     curr_proc = next_proc;
@@ -71,7 +76,7 @@ void PROC_init(void)
     ready_proc = PROC_list_new();
     all_proc = PROC_list_new();
     keyboard_wait = PROC_list_new();
-    ata_read_wait = PROC_list_new();
+    blk_dev_wait = PROC_list_new();
 
     // original proc
     proc0 = kmalloc(sizeof(struct Process));
@@ -122,6 +127,7 @@ struct Process *PROC_create_kthread(kproc_t entry_point, void *arg)
     proc->pid = next_pid++;
     proc->state = READY;
 
+
     //set exit
     proc->stack.exit = kexit;
 
@@ -129,10 +135,17 @@ struct Process *PROC_create_kthread(kproc_t entry_point, void *arg)
     proc->ctx.rdi = (uint64_t)arg;
     proc->ctx.rip = (uint64_t)entry_point;
     proc->ctx.rsp = (uint64_t)&proc->stack.exit; 
+    proc->ctx.rbp = (uint64_t)&proc->stack + STACK_SIZE;
     proc->ctx.cs = 0x08;
+    uint64_t rflags;
+    asm ("pushfq; pop %0" : "=r"(rflags));
+    proc->ctx.rflags = rflags; //interrupts ON!
+    kprintf("thread create: rflags = %lx\n", rflags);
 
     // add to queue(s)
+    CLI;
     push_back(ready_proc, proc);
+    STI;
     // push_back(all_proc, proc);
     return proc;
 }
@@ -191,6 +204,7 @@ void PROC_run(void) {
 
 
 void PROC_block_on(struct PROC_list *blocking_q, int enable_ints) {
+    CLI;
     if (blocking_q == KERNEL_NULL) {
         asm volatile("hlt");
     }
@@ -201,6 +215,8 @@ void PROC_block_on(struct PROC_list *blocking_q, int enable_ints) {
     yield();
 }
 
+
+// only safe to call with interrupts OFF
 void PROC_unblock_all(struct PROC_list *blocking_q) {
     struct PROC_list_node *curr = blocking_q->head;
     for (size_t i=0; i<blocking_q->len; i++) {
@@ -212,6 +228,7 @@ void PROC_unblock_all(struct PROC_list *blocking_q) {
     clear(blocking_q);
 }
 
+// only safe to call with interrupts OFF
 void PROC_unblock_head(struct PROC_list *blocking_q) {
     if (blocking_q->len == 0)
         return;

@@ -2,9 +2,12 @@
 #define BLOCK_DEVICE_H
 
 #include <stdint.h>
+#include <stddef.h>
 
 
 enum BlockDevType { MASS_STORAGE, PARTITION };
+
+
 
 struct BlockDev {
     uint64_t tot_length;
@@ -15,6 +18,17 @@ struct BlockDev {
     uint8_t fs_type;
     struct BlockDev *next;
 };
+
+struct BlockQueue {
+    struct BlockDev *head;
+    struct BlockDev *last;
+    size_t len;
+};
+
+extern struct BlockQueue *BLK_devices_list;
+
+void BLK_init(void);
+int BLK_register(struct BlockDev *dev);
 
 
 #endif

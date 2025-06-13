@@ -7,6 +7,8 @@
 #include "irq.h"
 #include "string.h"
 
+#define BLK_SIZE 512
+
 
 #define IRQ_PRIMARY 14
 #define IRQ_SECONDARY 15
@@ -16,13 +18,15 @@
 #define IO_BASE_SECONDARY 0x170 //through 0x177 => 8 ports
 
 #define DATA_OFFSET 0
+#define ERROR_OFFSET 1 // read
+#define FEATURES_OFFSET 1 //write
 #define SECTORCOUNT_OFFSET 2
 #define LBA_LO_OFFSET 3
 #define LBA_MID_OFFSET 4
 #define LBA_HI_OFFSET 5
 #define DRIVE_SELECT_OFFSET 6
-#define CMD_OFFSET 7
-#define STATUS_OFFSET 7
+#define CMD_OFFSET 7 //read
+#define STATUS_OFFSET 7 //write
 
 
 #define CONTROL_BASE_PRIMARY 0x3f6
@@ -109,6 +113,10 @@
 
 
 
+//io register bits
+#define LBA 0x40
+
+
 
 
 // status register bits
@@ -133,6 +141,9 @@
 #define BBK 0x80 // bad block detected
 
 
+struct ATABlockDev *ATA_instance;
+
+
 static inline void outb(uint16_t port, uint8_t val) {
     asm("outb %0, %1" : : "a"(val), "Nd"(port));
 }
@@ -140,6 +151,12 @@ static inline void outb(uint16_t port, uint8_t val) {
 static inline uint8_t inb(uint16_t port) {
     uint8_t ret;
     asm volatile("inb %1, %0" : "=a"(ret) : "Nd"(port));
+    return ret;
+}
+
+static inline uint16_t inw(uint16_t port) {
+    uint16_t ret;
+    asm volatile("inw %1, %0" : "=a"(ret) : "Nd"(port));
     return ret;
 }
 
@@ -152,7 +169,7 @@ static inline uint8_t inb(uint16_t port) {
 // }
 
 
-void ata_soft_reset(uint16_t ctrl_base) {
+void ATA_soft_reset(uint16_t ctrl_base) {
     uint8_t status = inb(ctrl_base);
     outb(ctrl_base, status | (1 << 2));
     inb(ctrl_base);
@@ -163,7 +180,7 @@ void ata_soft_reset(uint16_t ctrl_base) {
 
 
 int detect_device_type(struct ATABlockDev *d) {
-    ata_soft_reset(d->ctrl_base); // = device control register / alternate status ports
+    ATA_soft_reset(d->ctrl_base); // = device control register / alternate status ports
     outb(d->io_base + DRIVE_SELECT_OFFSET, 0xa0 | d->slave << 4);
     inb(d->ctrl_base); // 400 ns wait ;)
     inb(d->ctrl_base);
@@ -347,51 +364,307 @@ void identify_primary() {
 }
 
 void handle_ATA_read(uint8_t irq, uint32_t err, void *arg) {
+// Check ATA status (make sure it's DRQ and not an error)
+// Read the data from 0x1F0
+// Set a flag or wake a waiting thread
+// Send EOI to the PIC
 
+// if (!(inb(0x1F7) & 0x08)) // error
+    struct ATABlockDev *ata = (struct ATABlockDev *)arg;
+
+    uint8_t status = inb(ata->io_base + STATUS_OFFSET);
+    if (status & ERR) {
+        uint8_t error = inb(ata->io_base + ERROR_OFFSET);
+        kprintf("ATA handler error num: %x\n", error);
+        asm volatile ("hlt");
+    }
+    // if ((status & DRQ) == 0) {
+    //     kprintf("ATA handler: DRQ bit not set in status = %x\n", status);
+    //     asm volatile ("hlt");
+    // }
+
+    // now safe to read
+    struct ATARequest *req = ata->req_head;
+
+    for (int i = 0; i < BLK_SIZE / 2; i++) {
+        req->data[i] = inw(ata->io_base);
+    }
+
+    PROC_unblock_all(req->blocked);
 }
 
 
-// int ATA_read_block(struct BlockDev *this, uint64_t blk_num, void *dst) {
+typedef union lba {
+    uint64_t addr;
+    struct {
+        uint8_t low0;
+        uint8_t low1;
+        uint8_t low2;
+        uint8_t high0;
+        uint8_t high1;
+        uint8_t high2;
+        uint16_t unused;
+    } parts;
+} lba_t;
 
 
-// }
+void ATA_add_request(struct ATABlockDev *ata, struct ATARequest *req) {
+    if (req == KERNEL_NULL)
+        return;
+    req->next = KERNEL_NULL;
+    if (ata->req_head == KERNEL_NULL) {
+        ata->req_head = req;
+    } else {
+        ata->req_tail->next = req;
+    }
+    ata->req_tail = req;
+}
+
+void ATA_pop_head_request(struct ATABlockDev *ata) {
+    if (ata->req_head == KERNEL_NULL) {
+        return;
+    }
+    struct ATARequest *head = ata->req_head;
+    ata->req_head = ata->req_head->next;
+    if (ata->req_head == KERNEL_NULL) {
+        ata->req_tail = KERNEL_NULL;
+    }
+    // free the former head
+    kfree(head->blocked);
+    kfree(head);
+}
+
+
+void ATA_48_read_cmd(struct ATABlockDev *ata, uint64_t blk_num) {
+    lba_t lba;
+    lba.addr = blk_num;
+        
+    // a little polling OK?
+    while (inb(ata->io_base + STATUS_OFFSET) & BSY)
+        ;
+
+    // Send 0x40 for the "master" or 0x50 for the "slave" to port 0x1F6
+    outb(ata->io_base + DRIVE_SELECT_OFFSET, LBA | (ata->slave << 4)); // 0ce0 or LBA
+    
+
+    uint16_t sectorcount = 0x0001;
+    // write upper 3 bytes
+    outb(ata->io_base + SECTORCOUNT_OFFSET, (uint8_t)(sectorcount >> 8));
+    outb(ata->io_base + LBA_LO_OFFSET, lba.parts.high0);
+    outb(ata->io_base + LBA_MID_OFFSET, lba.parts.high1);
+    outb(ata->io_base + LBA_HI_OFFSET, lba.parts.high2);
+    // write lower 3 bytes
+    outb(ata->io_base + SECTORCOUNT_OFFSET, (uint8_t)sectorcount);
+    outb(ata->io_base + LBA_LO_OFFSET, lba.parts.low0);
+    outb(ata->io_base + LBA_MID_OFFSET, lba.parts.low1);
+    outb(ata->io_base + LBA_HI_OFFSET, lba.parts.low2);
+
+    // Send the "READ SECTORS EXT" command (0x24) to port 0x1F7
+    outb(ata->io_base + CMD_OFFSET, ATA_CMD_READ_PIO_EXT);
+}
 
 
 
-void init_ata() {
+int ATA_48_read_block(struct BlockDev *this, uint64_t blk_num, void *dst) {
+    // start
+    struct ATABlockDev *ata = (struct ATABlockDev *)this; // DOWNCAST OK?
+    // lba_t lba;
+    // lba.addr = blk_num;
+
+
+
+    // allocate node
+    // add to list
+    struct ATARequest *req = kmalloc(sizeof(struct ATARequest));
+    memset(req, 0, sizeof(struct ATARequest));
+    req->block = blk_num;
+    req->next = KERNEL_NULL;
+    req->blocked = PROC_list_new();
+
+    CLI;
+    // if the req queue was already empty -> read cmd
+    int was_empty = (ata->req_head == KERNEL_NULL);
+
+    ATA_add_request(ata, req);
+    
+
+    if (was_empty) {
+        ATA_48_read_cmd(ata, blk_num);
+    }
+    STI;
+
+    PROC_block_on(req->blocked, 1); // enable ints = true???
+
+    // copy data to dst
+    memcpy(dst, req->data, BLK_SIZE);
+
+    // free the request
+    ATA_pop_head_request(ata);
+
+    if (ata->req_head != KERNEL_NULL) {
+        ATA_48_read_cmd(ata, ata->req_head->block);
+    }
+
+    // TODO retval depends on success or failure 
+    return 0; 
+}
+
+
+
+
+
+void display_device_type(device_type t) {
+    switch (t) {
+        case PATAPI:
+            kprintf("PATAPI");
+            break;
+        case SATAPI:
+            kprintf("SATAPI");
+            break;
+        case PATA:
+            kprintf("PATA");
+            break;
+        case SATA:
+            kprintf("SATA");
+            break;
+        case UNKNOWN:
+            kprintf("UNKNOWN");
+            break;
+        default:
+            kprintf("unrecognized device type");
+    }
+}
+
+
+struct BlockDev *ATA_probe(uint16_t base, uint16_t master, uint8_t slave, uint8_t irq) {
     if (inb(STATUS_PRIMARY) == 0xff) {
         kprintf("'Floating' primary bus\n");
+        asm volatile ("hlt");
     }
     if (inb(STATUS_SECONDARY) == 0xff) {
         kprintf("'Floating' secondary bus\n");
-    }
-
-    struct ATABlockDev *d = kmalloc(sizeof(struct ATABlockDev));
-    d->ctrl_base = CONTROL_BASE_PRIMARY;
-    d->io_base = IO_BASE_PRIMARY;
-    d->slave = 0;
-    d->irq = 14;
-    
-    int dt = detect_device_type(d);
-    if (dt != PATA && dt != SATA) {
-        kprintf("device type = %d\n", dt);
         asm volatile ("hlt");
     }
-    kprintf("device type %d\n", dt);
 
-    // get device length
-    d->dev.tot_length = device_length(d);
-    kprintf("nb sectors: %ld\n", d->dev.tot_length);
-    d->dev.blk_size = 512;
-    d->dev.fs_type = MASS_STORAGE;
-    d->dev.name = strdup("ata");
-    d->dev.next = KERNEL_NULL;
-    // d->dev.read_block = &ATA_read_block;
+    struct ATABlockDev *ata;
+    ata = kmalloc(sizeof(*ata));
+    memset(ata, 0, sizeof(*ata));
 
-    // set interrupt handler
-    IRQ_set_handler(14 + 0x20, handle_ATA_read, KERNEL_NULL);
+    // subclass init //fs type???
+    ata->io_base = base;
+    ata->ctrl_base = master;
+    ata->slave = slave;
+    ata->irq = irq;
+    ata->dev.read_block = ATA_48_read_block;
+    ata->req_head = KERNEL_NULL;
+    ata->req_tail = KERNEL_NULL;
 
-    // unmask PIC
+    // superclass init
+    ata->dev.blk_size = 512;
+    ata->dev.fs_type = MASS_STORAGE;
+    ata->dev.name = strdup("ata");
+    ata->dev.next = KERNEL_NULL;
+    ata->dev.tot_length = device_length(ata);
+
+    // verify device type
+    int dev_type = detect_device_type(ata); // NEED TO UPCAST?
+    if (dev_type != PATA && dev_type != SATA) {
+        kprintf("Wrong device type = ");
+        display_device_type(dev_type);
+        kprintf("\n");
+        asm volatile ("hlt");
+    }
+
+    // It's PATA - OK?
+    kprintf("device type = ");
+    display_device_type(dev_type);
+    kprintf("\n");
+
+
+    // set interrupt handler (0x20 is the irq for the PIC base)
+    IRQ_set_handler(ata->irq, &handle_ATA_read, ata);
+
     
+    // unmask PIC
+    // IRQ_clear_mask(2);
+    // IRQ_clear_mask(ata->irq - 0x20);
+    // kprintf("Cleared PIC nb: %d\n", ata->irq - 0x20);
+
+
+    // for (int i=2; i<15; i++) {
+    //     IRQ_clear_mask(i);
+    // }
+
+    return (struct BlockDev *)ata;
+}
+
+
+
+
+
+void ATA_init() {
+    uint8_t slave = 0;
+
+    //0x20 is the base IRQ of the PIC
+    struct BlockDev *dev = ATA_probe(IO_BASE_PRIMARY, CONTROL_BASE_PRIMARY, slave, 0x20 + IRQ_PRIMARY);
+    
+    kprintf("nb sectors: %ld\n", dev->tot_length);
+
+    // register the ATA block device
+    BLK_register(dev);
+
+    // THERE HAS TO BE A BETTER WAY
+    ATA_instance = (struct ATABlockDev *)dev;
+
+    // enable interrupts
+    outb(DCR_PRIMARY, 0x00);
+}
+
+
+uint16_t ip_checksum(const void *data, size_t length) {
+    const uint8_t *bytes = data;
+    uint32_t sum = 0;
+
+    // Sum all 16-bit words
+    for (size_t i = 0; i + 1 < length; i += 2) {
+        uint16_t word = (bytes[i] << 8) | bytes[i + 1];
+        sum += word;
+    }
+
+    // Handle odd byte at the end (if any)
+    if (length & 1) {
+        uint16_t last_byte = bytes[length - 1] << 8;
+        sum += last_byte;
+    }
+
+    // Fold 32-bit sum to 16 bits
+    while (sum >> 16)
+        sum = (sum & 0xFFFF) + (sum >> 16);
+
+    // One's complement
+    return (uint16_t)(~sum);
+}
+
+void test_ATA_read(int blk_num) {
+    uint16_t buff[BLK_SIZE/2];
+	ATA_instance->dev.read_block(&ATA_instance->dev, blk_num, buff);
+	kprintf("Block %d:\n", blk_num);
+	for (int i=0; i<BLK_SIZE/2; i++) {
+		// endian-ness correction
+		uint8_t *x = (uint8_t *)(buff + i);
+		uint8_t *y = x + 1;
+
+		*x ^= *y;
+		*y ^= *x;
+		*x ^= *y;
+	}
+
+	for (int i=0; i< 256; i++) {
+		kprintf("%x", buff[i]);
+	}
+	kprintf("\n");
+
+	uint16_t checksum = ip_checksum(buff, BLK_SIZE);
+	kprintf("checksum: 0x%x (%d)", checksum, checksum);
 }
 

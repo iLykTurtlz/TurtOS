@@ -5,8 +5,8 @@
 #include "kprint.h"
 #include <stddef.h>
 
-#define CLI __asm__ volatile("cli");
-#define STI __asm__ volatile("sti");
+#define CLI do { __asm__ volatile("cli"); } while (0);
+#define STI do { __asm__ volatile("sti"); } while (0);
 
 
 int interrupts_enabled();

@@ -1,6 +1,7 @@
 #include "parse_multiboot.h"
 #include <stddef.h>
 #include "kprint.h"
+#include "math.h"
 
 
 
@@ -78,9 +79,7 @@ struct elf_symbols {
 
 struct memory_region *memory_info_page_start;
 
-int min(const int a, const int b) {
-    return a < b ? a : b;
-}
+
 
 // assign first free memory region large enough for a page to memory_info_page_start
 void find_first_free_page(struct memory_info_entry *meminfo_arr, size_t meminfo_arr_len, struct elf_section_header *elfheader_arr, size_t elfheader_arr_len)

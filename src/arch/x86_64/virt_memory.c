@@ -329,8 +329,11 @@ void *MMU_alloc_page(void) {
     return MMU_alloc_pages(1);
 }
 
+
+// THREAD SAFE
 void *MMU_alloc_pages(int num) {
     union vaddr res;
+    CLI;
     res.value = next_alloc.kernel_heap.value;
     if (res.addr.L4_offset & (1 << 8)) {
         res.addr.sign_extension = 0xffff;
@@ -350,6 +353,7 @@ void *MMU_alloc_pages(int num) {
         curr.value += PAGE_FRAME_SIZE;
     }
     next_alloc.kernel_heap.value = curr.value;
+    STI;
     return (void *)res.value;
 }
 
@@ -381,43 +385,44 @@ void MMU_free_pages(void *ptr, int num) {
 }
 
 
-#define NB_TEST_ALLOCS 2000
-static void *pointers[NB_TEST_ALLOCS];
-void test_paging(void) {
-    size_t i=0;
-    union vaddr address;
-    pointers[i] = MMU_alloc_page();
-    kprintf("DEBUG_NB_ALLOCS = %ld\n", DEBUG_NB_ALLOCS);
-    uint64_t *n = pointers[i];
-    *n = (uint64_t)pointers[i];
-    address.value = (uint64_t)pointers[i];
-    kprintf("vaddr: %p - addr: %p\n", pointers[i], vaddr_to_addr(address));
-    kprintf("%ld %p\n", i, pointers[i]);
-    if (*n != (uint64_t)pointers[i]) {
-        kprintf("UH OH! *n should be %p, instead *n=%ld\n", pointers[i], *n);
-    }
-    i++;
-    for (; i<NB_TEST_ALLOCS ; i++) {
-        pointers[i] = MMU_alloc_page();
-        if (pointers[i] == KERNEL_NULL) {
-            break;
-        }
-        // kprintf("DEBUG_NB_ALLOCS = %ld\n", DEBUG_NB_ALLOCS);
+// open this up when 
+// #define NB_TEST_ALLOCS 2000
+// static void *pointers[NB_TEST_ALLOCS];
+// void test_paging(void) {
+//     size_t i=0;
+//     union vaddr address;
+//     pointers[i] = MMU_alloc_page();
+//     kprintf("DEBUG_NB_ALLOCS = %ld\n", DEBUG_NB_ALLOCS);
+//     uint64_t *n = pointers[i];
+//     *n = (uint64_t)pointers[i];
+//     address.value = (uint64_t)pointers[i];
+//     kprintf("vaddr: %p - addr: %p\n", pointers[i], vaddr_to_addr(address));
+//     kprintf("%ld %p\n", i, pointers[i]);
+//     if (*n != (uint64_t)pointers[i]) {
+//         kprintf("UH OH! *n should be %p, instead *n=%ld\n", pointers[i], *n);
+//     }
+//     i++;
+//     for (; i<NB_TEST_ALLOCS ; i++) {
+//         pointers[i] = MMU_alloc_page();
+//         if (pointers[i] == KERNEL_NULL) {
+//             break;
+//         }
+//         // kprintf("DEBUG_NB_ALLOCS = %ld\n", DEBUG_NB_ALLOCS);
 
-        n = pointers[i];
-        *n = (uint64_t)pointers[i];
-        address.value = (uint64_t)pointers[i];
-        kprintf("vaddr: %p - addr: %p\n", pointers[i], vaddr_to_addr(address));
-        kprintf("%ld %p\n", i, pointers[i]);
-        if (*n != (uint64_t)pointers[i]) {
-            kprintf("UH OH! *n should be %p, instead *n=%ld\n", pointers[i], *n);
-        }
-    }
-    // address.value = (uint64_t)pointers[i-1];
-    // kprintf("Last page: vaddr = %p, addr = %p\n", pointers[i-1], vaddr_to_addr(address));
-    kprintf("All pages allocated\n");
-    for (size_t j=0; j<i; j++) {
-        MMU_free_page(pointers[j]);
-    }
-    kprintf("All pages free'd\n");
-}
+//         n = pointers[i];
+//         *n = (uint64_t)pointers[i];
+//         address.value = (uint64_t)pointers[i];
+//         kprintf("vaddr: %p - addr: %p\n", pointers[i], vaddr_to_addr(address));
+//         kprintf("%ld %p\n", i, pointers[i]);
+//         if (*n != (uint64_t)pointers[i]) {
+//             kprintf("UH OH! *n should be %p, instead *n=%ld\n", pointers[i], *n);
+//         }
+//     }
+//     // address.value = (uint64_t)pointers[i-1];
+//     // kprintf("Last page: vaddr = %p, addr = %p\n", pointers[i-1], vaddr_to_addr(address));
+//     kprintf("All pages allocated\n");
+//     for (size_t j=0; j<i; j++) {
+//         MMU_free_page(pointers[j]);
+//     }
+//     kprintf("All pages free'd\n");
+// }

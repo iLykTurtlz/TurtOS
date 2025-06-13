@@ -78,7 +78,7 @@ void PIC_remap(int offset1, int offset2)
 	// io_wait();
 
 	// Mask both PICs.
-	outb(PIC1_DATA, 0xff);
+	outb(PIC1_DATA, 0xff ^ (1 << 2)); // keep the daisy chain interrupt on
 	outb(PIC2_DATA, 0xff);
 }
 
@@ -86,7 +86,7 @@ void PIC_remap(int offset1, int offset2)
 
 // a
 void pic_disable(void) {
-    outb(PIC1_DATA, 0xff);
+    outb(PIC1_DATA, 0xff ^ (1 << 2)); // keep the daisy chain interrupt on
     outb(PIC2_DATA, 0xff);
 }
 

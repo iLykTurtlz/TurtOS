@@ -96,10 +96,10 @@ void IDT_init() {
 
     //test
     for (uint16_t vector=0; vector < IDT_MAX_DESCRIPTORS; vector++) {
-        if (vector != KEXIT)
-            IDT_set_descriptor(vector, isr_stub_table[vector], 0xe); //8f is trap, 8e is interrupt
-        else
-            IDT_set_descriptor(vector, isr_stub_table[vector], 0xf); 
+        // if (vector != KEXIT)
+            IDT_set_descriptor(vector, isr_stub_table[vector], 0x8e); //8f is trap, 8e is interrupt
+        // else
+        //     IDT_set_descriptor(vector, isr_stub_table[vector], 0x8f); 
         vectors[vector] = 1;
     }
 

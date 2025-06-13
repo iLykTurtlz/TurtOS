@@ -97,6 +97,7 @@ void handle_serial(uint8_t irq, uint32_t error, void *arg) {
 
 
 int serial_write(const char *buff, int len) {
+    
     size_t i=0;
     uint64_t rflags;
     // asm ("mov %0 %%rflags" : "=r"(rflags)); //read RFLAGS - check if interrupts on, then only re-enable if they were on.
@@ -136,8 +137,14 @@ int serial_write(const char *buff, int len) {
 
 void serial_init() {
     //state init
+    uint64_t rflags;
+    asm ("pushfq; pop %0" : "=r"(rflags));
+    int interrupts_enabled = (rflags >> 9) & 1;
+    CLI;
     state.busy = 0;
     char_circular_queue_init(&state.serial_buffer, consume_next);
+    if (interrupts_enabled)
+        STI;
 
     //hardware init
     outb(IER, 0x00);    // mask all interrupts

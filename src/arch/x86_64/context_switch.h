@@ -53,7 +53,7 @@ struct Process *PROC_create_kthread(kproc_t entry_point, void *arg); //needed fo
 void PROC_reschedule(void);
 void yield(void);
 void kexit(void);
-void PROC_test(void);
+// void PROC_test(void);
 
 
 

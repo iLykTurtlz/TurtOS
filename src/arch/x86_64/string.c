@@ -1,6 +1,7 @@
 #include "string.h"
 #include <stddef.h>
 #include "kmalloc.h"
+#include "phys_memory.h"
 
 size_t strlen(const char *s)
 {
@@ -15,6 +16,14 @@ char *strcpy(char *dest, const char *src)
 	char *d = dest;
 	while ((*d++ = *src++))
 		;
+	return dest;
+}
+
+char *strncpy(char *dest, const char *src, size_t n)
+{
+	char *d = dest;
+	while (n > 0 && (*d++ = *src++))
+		n--;
 	return dest;
 }
 
@@ -33,7 +42,7 @@ const char *strchr(const char *s, int c)
 	char target = c;
 	while (*s && *s != target)
 		s++;
-	return *s == target ? s : NULL;
+	return *s == target ? s : KERNEL_NULL;
 }
 
 char *strcat(char *restrict dst, const char *restrict src)
@@ -106,4 +115,6 @@ char *strdup(const char *s) {
 	res[len] = '\0';
 	return res;
 }
+
+
 
