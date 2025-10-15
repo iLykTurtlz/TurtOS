@@ -9,7 +9,7 @@ This is a kernel for x86_64, created for practice and exploration of operating s
 * GDT, IDT, TSS
 * UART serial driver with circular buffer 
 * context switching, ISRs, cooperative multitasking
-* batch or round robin scheduling
+* round robin scheduling
 * interrupt-driven keyboard
 * 4-level page table with on demand paging
 * heap allocator
